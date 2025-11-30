@@ -84,101 +84,65 @@ This allows scalable, enterprise-grade applications without complexity.
 
 ```txt
 orivusjs/
-├── README.md
-├── package.json
-├── tsconfig.json
-├── orivus.config.ts
+├── orivus.config.ts       # Framework configuration
+├── vitest.config.ts       # Testing configuration
 ├── prisma/
-│   ├── schema.prisma
-│   └── migrations/
+│   └── schema.prisma      # Database schema
 └── src/
-    ├── app/
-    │   ├── (marketing)/
-    │   ├── (dashboard)/
-    │   └── api/trpc/[trpc]/
-    ├── domain/
+    ├── app/               # Next.js App Router (Routing Layer)
+    │   ├── users/         # Route delegating to domain page
+    │   └── api/trpc/      # tRPC API handler
+    ├── domain/            # 🧠 The Brain (Business Logic)
     │   ├── user/
+    │   │   ├── ui/        # Reusable Components
+    │   │   ├── pages/     # Full Page Components
     │   │   ├── user.model.ts
     │   │   ├── user.router.ts
     │   │   ├── user.service.ts
-    │   │   ├── user.ui.tsx
-    │   │   └── user.spec.ts
+    │   │   ├── user.spec.ts
+    │   │   └── user.test.ts
     ├── server/
-    │   ├── trpc/
-    │   ├── jobs/
-    │   └── emails/
-    ├── db/client.ts
-    └── orivus/
-        ├── core/
-        ├── cli/
-        └── ai/
+    │   ├── trpc/          # Auto-generated Router
+    │   ├── jobs/          # Background Jobs
+    │   └── emails/        # Email Templates
+    └── orivus/            # Framework Core
+        ├── core/          # Utilities (DB, Auth)
+        ├── cli/           # Automation Tools
+        └── ai/            # Future AI Engine
+```
 
+---
 
-⸻
+# ✨ Features v0.1
 
-🔧 Example: tRPC Router
+- **AI-Ready Architecture**: Modular `domain/` structure designed for LLM context windows.
+- **Auto-Router CLI**: `npm run orivus:gen` automatically wires up your API.
+- **Domain Pages**: Portable UI pages that live with their business logic.
+- **Type-Safety**: End-to-end typing from Database to UI.
+- **Security**: OWASP-ready error handling and authentication patterns.
+- **Testing**: Integrated Vitest setup for unit and integration tests.
 
-// src/domain/user/user.router.ts
-import { z } from "zod";
-import { router, publicProcedure } from "@/server/trpc/router";
+---
 
-export const userRouter = router({
-  list: publicProcedure.query(async ({ ctx }) => {
-    return ctx.db.user.findMany();
-  }),
+# 🚀 Roadmap
 
-  create: publicProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        email: z.string().email(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      return ctx.db.user.create({ data: input });
-    }),
-});
+### v0.1 (Completed ✅)
+- [x] Base framework structure (Next.js + tRPC + Prisma)
+- [x] Domain Module architecture
+- [x] Auto-loader for Routers
+- [x] Security Foundation (OWASP)
+- [x] Testing Infrastructure
 
+### v0.2 (Coming Soon 🚧)
+- [ ] **AI Spec Engine**: `orivus scaffold` to generate code from `spec.ts`.
+- [ ] **Natural Language CLI**: `orivus ai "create blog module"`
+- [ ] **Vector Database**: Native support for embeddings (pgvector).
+- [ ] **Self-Healing**: Agents that fix build errors automatically.
 
-⸻
+### v1.0 (Vision)
+- [ ] Production-ready Orivus Cloud
+- [ ] Full AI Maintainer (MCP-powered)
 
-🧠 Spec-Driven Example (v0.2+)
-
-// user.spec.ts
-export const userSpec = {
-  name: "user",
-  entities: ["User"],
-  operations: ["list", "create"],
-  aiNotes: "Handles user registration and listing.",
-};
-
-Future versions of OrivusJS will generate full modules from SPEC files.
-
-⸻
-
-🚀 Roadmap
-
-v0.1 (current)
-	•	Base framework structure
-	•	Domain Module architecture
-	•	Next.js + tRPC + Prisma integration
-	•	Initial example module (user)
-
-v0.2
-	•	CLI: orivus new + orivus generate module
-	•	SPEC Engine v1
-	•	AI prompt templates
-	•	Auto-module generators
-
-v0.3
-	•	AI Maintainer (MCP-powered)
-	•	SPEC → full module generation
-	•	Job scheduler engine
-
-v1.0
-	•	Production-ready release
-	•	Full documentation + examples
-	•	Orivus Cloud (optional deployment platform)
 
 ⸻
 

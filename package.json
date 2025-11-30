@@ -1,0 +1,35 @@
+{
+  "name": "orivusjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "orivus:gen": "npx tsx src/orivus/cli/generate-router.ts",
+    "dev": "npm run orivus:gen && next dev",
+    "build": "npm run orivus:gen && next build",
+    "test": "vitest",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.9.1",
+    "@tanstack/react-query": "^4.36.1",
+    "@trpc/client": "^10.45.0",
+    "@trpc/react-query": "^10.45.0",
+    "@trpc/server": "^10.45.0",
+    "next": "14.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.23",
+    "@vitejs/plugin-react": "^5.1.1",
+    "jsdom": "^27.2.0",
+    "prisma": "^5.9.1",
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.14"
+  }
+}
