@@ -1,9 +1,10 @@
 {
   "name": "orivusjs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "orivus:gen": "npx tsx src/orivus/cli/generate-router.ts",
+    "orivus:create": "npx tsx src/orivus/cli/create-module.ts",
     "dev": "npm run orivus:gen && next dev",
     "build": "npm run orivus:gen && next build",
     "test": "vitest",

@@ -1,108 +1,210 @@
-# OrivusJS v0.1 (Alpha)
+# 🪐 OrivusJS (v0.2 Beta)
 
-> **The AI-Native Full-Stack Framework.**
-> Built for the era of Generative AI. Modular Domain-Driven Design, Type-Safe from Database to UI.
+> **The AI-Native Framework for Building Modern Startups.**  
+> Describe your domain. Generate your backend. Build at the speed of thought.
 
-## The Vision
+OrivusJS is the first backend framework intentionally designed for a world where **developers and LLMs build software together**.  
+Instead of writing routers, services, schemas, and boilerplate, you describe your **domain in a Spec**, and OrivusJS generates a clean, type-safe, production-ready backend in seconds.
 
-**Software development is evolving.** We are moving from "writing code" to "describing intent".
+It is not “AI-powered.”  
+It is **AI-native** — meaning the framework gives AI models the structure, constraints, and patterns they need to generate real software with quality and consistency.
 
-OrivusJS exists to bridge this gap. It is not just a framework; it is a **Platform** designed for the age where AI writes the implementation, but Humans define the architecture.
+---
 
-We believe in:
-1.  **Intent over Syntax**: You define the *What* (Spec), Orivus handles the *How*.
-2.  **Verticality**: Code should be organized by Feature, not by Technology.
-3.  **Type-Safety as Law**: If it compiles, it works.
+## 🚀 Why OrivusJS Exists
 
-## 🌟 Philosophy
+Modern development breaks when you try to move fast:
 
-OrivusJS is an **AI-Native Framework** built for **speed**. It delivers the ultimate experience for both Developers and AI, bridging the gap between Human Intent and Execution.
+- Too much boilerplate  
+- Too many decisions for simple tasks  
+- Frameworks not built for LLM collaboration  
+- Hard to validate ideas quickly  
+- Difficult to maintain architectural quality at speed  
 
-- **AI-Native**: The codebase is structured to be easily understood and manipulated by LLMs.
-- **Domain-Driven**: Logic is encapsulated in vertical slices (`src/domain/`), not scattered across technical layers.
-- **Type-Safe**: End-to-end type safety using TypeScript, Prisma, tRPC, and Zod.
+And when you bring AI into the equation, the gap becomes even bigger:  
+LLMs generate code, but without **structure**, **constraints**, and **consistent patterns**, the output quickly becomes spaghetti.
 
-## 🏗️ Architecture
+OrivusJS was created to solve this.
 
-### Directory Structure
+> **The mission: let humans focus on ideas, while OrivusJS and LLMs handle the scaffolding.**  
+> Faster prototypes. Cleaner architecture. Zero boilerplate.
+
+This is not just another framework —  
+This is an **operating system for building startups with AI**.
+
+---
+
+## 🧠 What Makes OrivusJS AI-Native?
+
+### 1. **Spec-Driven Development**
+Developers (or LLMs) write a simple domain Spec that describes:
+
+- models  
+- fields  
+- relations  
+- actions  
+- input/output contracts  
+
+From that, OrivusJS generates everything.
+
+### 2. **Deterministic Architecture**
+LLMs perform best when the framework provides:
+
+- strict folder structure  
+- predictable module boundaries  
+- enforced layers  
+- templates and naming conventions  
+
+OrivusJS is designed around those constraints — not as an afterthought, but as a foundational concept.
+
+### 3. **End-to-End Type Safety**
+The entire stack — DB → Service → Router — is fully typed:
+
+- Prisma  
+- Zod  
+- tRPC  
+
+LLMs understand types, and types guide them to produce better, safer code.
+
+### 4. **Zero Boilerplate for 90% of CRUD**
+You never write:
+
+- routers  
+- services  
+- DTOs  
+- validation schemas  
+- database models  
+- integration tests  
+
+OrivusJS generates all of them with perfect consistency.
+
+---
+
+## 🛠️ Quick Start
+
+### 1. Installation
+
+```bash
+git clone https://github.com/orivus/orivusjs.git
+cd orivusjs
+npm install
+```
+
+### 2. Define your Module Spec
+
+Create a JSON or TS Spec (e.g., `specs/blog.json`):
+
+```json
+{
+  "name": "post",
+  "description": "Blog management system",
+  "models": {
+    "Post": {
+      "title": { "type": "string", "required": true },
+      "content": { "type": "string" },
+      "published": { "type": "boolean" },
+      "tags": { "type": "string", "isArray": true }
+    }
+  },
+  "actions": {
+    "create": {
+      "description": "Publish a new post",
+      "input": { "title": { "type": "string" }, "content": { "type": "string" } },
+      "output": { "kind": "model", "modelName": "Post" }
+    },
+    "list": {
+      "output": { "kind": "model", "modelName": "Post", "isArray": true }
+    }
+  }
+}
+```
+
+### 3. Generate the Module
+
+```bash
+npm run orivus:create specs/blog.json
+```
+
+### 4. What gets generated? ✨
+
+- ✅ `post.schema.ts` — Zod validation + types
+- ✅ `post.service.ts` — business logic with Prisma
+- ✅ `post.router.ts` — tRPC API ready to use
+- ✅ `post.test.ts` — integration tests
+- ✅ `schema.prisma` — new DB model
+- ✅ Database auto-synced
+- ✅ Router auto-registered
+
+Developers focus on the domain.
+OrivusJS handles the rest.
+
+---
+
+## 🏗️ Architecture (v0.2)
 
 ```
 src/
-├── app/                 # Next.js App Router (UI Layer)
-│   ├── page.tsx         # Landing Page
-│   └── globals.css      # Design System (Tailwind)
-├── domain/              # Vertical Slices (Business Logic)
-│   └── user/            # Example Domain: User
-│       ├── user.model.ts    # Zod/Prisma Definitions
-│       ├── user.router.ts   # tRPC Router (API)
-│       └── user.spec.ts     # AI Context & Metadata
-├── server/              # Server Infrastructure
-│   └── trpc/            # tRPC Configuration
-│       └── router.ts    # Root App Router
-└── orivus/              # Core Framework Logic
-    └── core/            # Shared Utilities (DB, etc.)
+  ├── domain/
+  │   ├── user/
+  │   └── post/
+  ├── orivus/
+  │   ├── core/          # Spec types & parsing
+  │   ├── generator/     # Code generation engine
+  │   └── cli/           # OrivusJS CLI
+  └── server/
+      └── trpc/          # Main API router
 ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+
-- npm / pnpm
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/orivus/orivusjs.git
-
-# Install dependencies
-npm install
-
-# Initialize Database
-npx prisma generate
-npx prisma db push
-
-# Start Development Server
-npm run dev
-```
-
-## 🛠️ How to Create a New Module
-
-In v0.1, we follow a manual "Spec-First" workflow (to be automated in v0.2).
-
-1.  **Create Domain Folder**: `mkdir src/domain/post`
-2.  **Define Schema**: Add your model to `prisma/schema.prisma`.
-3.  **Create Router**: Create `src/domain/post/post.router.ts`.
-    ```typescript
-    import { router, publicProcedure } from "@/server/trpc/router";
-    import { z } from "zod";
-
-    export const postRouter = router({
-      list: publicProcedure.query(({ ctx }) => {
-        return ctx.db.post.findMany();
-      }),
-    });
-    ```
-4.  **Register Router**: Add it to `src/server/trpc/router.ts`.
-
-## 🔮 Roadmap
-
-### v0.1: The Foundation (Current)
-- [x] **Vertical Domain Architecture**: Scalable folder structure (`src/domain/[feature]`).
-- [x] **Type-Safe Core**: End-to-end type safety with tRPC, Prisma, and Zod.
-- [x] **Minimalist Landing**: Clean, professional entry point.
-- [x] **Spec-Driven Basics**: Initial implementation of `spec.ts` for domain definition.
-
-### v0.2: The AI Engine (Next)
-- [ ] **Orivus CLI**: `orivus gen` to scaffold domains from specs.
-- [ ] **Natural Language Specs**: Define modules using plain English in `.orivus` files.
-- [ ] **Auto-Wiring**: Automatic registration of routers and UI components.
-
-### v1.0: The Platform
-- [ ] **Orivus Studio**: A local dashboard to visualize your architecture and manage domains.
-- [ ] **One-Click Deploy**: Optimized for Vercel/AWS with zero config.
-- [ ] **Agentic Workflow**: Built-in AI agents that fix bugs and refactor code automatically.
+This ensures:
+- modular DDD
+- predictable boundaries
+- clear separation of concerns
+- easy LLM navigation
+- excellent developer experience
 
 ---
-*Architected by **Johann Pino**.*
-*Building the future of AI-Native Development.*
+
+## 🔮 Roadmap to v0.3
+
+OrivusJS is evolving rapidly toward its first global release.
+
+**Coming next:**
+
+- [ ] **Relations Engine**: One-to-many, many-to-many, and cascade relations defined in Spec.
+- [ ] **CLI v0.3**: `orivus create app <name>` — full project scaffolding.
+- [ ] **AI Spec Generator**: Transform natural language into valid Orivus Specs.
+  - *Example*: `orivus ask "Build a CRM with contacts, notes and pipelines"`
+- [ ] **Frontend Scaffolding**: Auto-generate Next.js forms, tables, views and hooks from the Spec.
+- [ ] **Better Testing Strategy**: Auto-generated unit + integration tests with mocking.
+
+These are the foundations for a future where **building a startup is as simple as describing it**.
+
+---
+
+## 🤝 Contributing
+
+OrivusJS is open source and community-driven.
+If you want to help shape the future of AI-native development, we welcome:
+- Issues
+- Ideas
+- Discussions
+- PRs
+- Experiments
+
+---
+
+## 📄 License
+
+MIT · Created by Johann Pino
+
+---
+
+## 🌍 Vision
+
+To empower a new generation of founders and developers to build software at the speed of imagination —
+where the human provides **clarity**,
+the AI provides **velocity**,
+and the framework provides **structure**.
+
+**OrivusJS is the bridge between ideas and software.**
+This is just the beginning.

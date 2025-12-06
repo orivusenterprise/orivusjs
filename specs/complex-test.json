@@ -1,0 +1,77 @@
+{
+    "name": "application",
+    "description": "Job Application Tracking System",
+    "models": {
+        "JobApplication": {
+            "candidateName": {
+                "type": "string",
+                "required": true
+            },
+            "status": {
+                "type": "string",
+                "description": "Enum: PENDING, REVIEW, HIRED",
+                "required": true
+            },
+            "salaryExpectation": {
+                "type": "number",
+                "description": "Annual salary in USD"
+            },
+            "skills": {
+                "type": "string",
+                "description": "JSON Array of skills"
+            },
+            "interviewDate": {
+                "type": "date",
+                "description": "Scheduled interview"
+            },
+            "isRemote": {
+                "type": "boolean",
+                "description": "Remote preference"
+            },
+            "resumeUrl": {
+                "type": "string",
+                "description": "Link to PDF"
+            }
+        }
+    },
+    "actions": {
+        "apply": {
+            "description": "Submit new application",
+            "input": {
+                "candidateName": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "salaryExpectation": {
+                    "type": "number"
+                },
+                "skills": {
+                    "type": "string"
+                },
+                "interviewDate": {
+                    "type": "date"
+                },
+                "isRemote": {
+                    "type": "boolean"
+                },
+                "resumeUrl": {
+                    "type": "string"
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "JobApplication"
+            }
+        },
+        "dashboard": {
+            "description": "List all applications for dashboard",
+            "output": {
+                "kind": "model",
+                "modelName": "JobApplication",
+                "isArray": true
+            }
+        }
+    }
+}
