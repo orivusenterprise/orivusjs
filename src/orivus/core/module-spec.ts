@@ -1,10 +1,15 @@
-export type SupportedDataType = 'string' | 'number' | 'boolean' | 'date' | 'json';
+export type SupportedDataType = 'string' | 'number' | 'boolean' | 'date' | 'json' | 'relation';
+
+export type RelationType = 'hasOne' | 'hasMany' | 'belongsTo' | 'manyToMany';
 
 export type FieldDefinition = {
     type: SupportedDataType;
     required?: boolean;
     description?: string;
     isArray?: boolean;
+    // Relation specifics
+    target?: string;       // Name of the target model (e.g., "User")
+    relationType?: RelationType;
 };
 
 export type ModelSchema = Record<string, FieldDefinition>;

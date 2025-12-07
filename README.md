@@ -92,7 +92,7 @@ npm install
 
 ### 2. Define your Module Spec
 
-Create a JSON or TS Spec (e.g., `specs/blog.json`):
+Create a JSON or TS Spec (e.g., `specs/examples/blog-simple.json`):
 
 ```json
 {
@@ -122,7 +122,7 @@ Create a JSON or TS Spec (e.g., `specs/blog.json`):
 ### 3. Generate the Module
 
 ```bash
-npm run orivus:create specs/blog.json
+npm run orivus:create specs/examples/blog-simple.json
 ```
 
 ### 4. What gets generated? ✨

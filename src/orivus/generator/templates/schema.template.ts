@@ -66,9 +66,27 @@ export function generateSchemaFile(spec: ParsedModuleSpec): string {
 
         let fieldsCode = model.fields
             .map((field) => {
+                if (field.type === "relation") {
+                    // Start of v0.3 Relations Logic
+                    if (field.relationType === "belongsTo") {
+                        // For 'belongsTo', we generate the Foreign Key field (e.g., authorId)
+                        // verifying we don't duplicate it if specified manually (though we assume auto-gen mostly)
+                        const fkName = `${field.name}Id`;
+                        // TODO: Check if fkName exists in model.fields to avoid duplication? 
+                        // Zod object duplicates override, so last one wins. Safe enough.
+
+                        const zodType = field.required ? "z.string()" : "z.string().optional()";
+                        return `  ${fkName}: ${zodType}, // Relation FK`;
+                    }
+                    // For 'hasMany' or nested objects, we SKIP them in the base schema 
+                    // to avoid circular dependency hell in Zod.
+                    return "";
+                }
+
                 const zodLine = mapToZodType(field);
                 return `  ${field.name}: ${zodLine},`;
             })
+            .filter(line => line !== "")
             .join("\n");
 
         // Auto-inject Standard Fields (to match Prisma Model)

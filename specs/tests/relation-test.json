@@ -1,0 +1,50 @@
+{
+    "name": "blog",
+    "description": "Relation test module",
+    "models": {
+        "User": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "posts": {
+                "type": "relation",
+                "target": "Post",
+                "relationType": "hasMany"
+            }
+        },
+        "Post": {
+            "title": {
+                "type": "string",
+                "required": true
+            },
+            "author": {
+                "type": "relation",
+                "target": "User",
+                "relationType": "belongsTo",
+                "required": true
+            }
+        }
+    },
+    "actions": {
+        "createUser": {
+            "description": "Create user",
+            "input": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "User"
+            }
+        },
+        "listUsers": {
+            "output": {
+                "kind": "model",
+                "modelName": "User",
+                "isArray": true
+            }
+        }
+    }
+}

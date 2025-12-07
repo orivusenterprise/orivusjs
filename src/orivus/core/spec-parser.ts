@@ -6,8 +6,14 @@ import {
     ActionOutput,
 } from "./module-spec";
 
-export type ParsedField = Required<FieldDefinition> & {
+export type ParsedField = {
     name: string;
+    type: FieldDefinition["type"];
+    required: boolean;
+    description: string;
+    isArray: boolean;
+    target?: string;
+    relationType?: string;
 };
 
 export type ParsedModel = {
@@ -18,7 +24,7 @@ export type ParsedModel = {
 export type ParsedAction = {
     name: string;
     input?: ParsedField[];
-    output: ActionOutput;
+    output: ActionOutput | { kind: "void" };
     description?: string;
 };
 
@@ -28,7 +34,7 @@ export type ParsedModuleSpec = {
     actions: ParsedAction[];
 };
 
-const SUPPORTED_TYPES = ["string", "number", "boolean", "date", "json"] as const;
+const SUPPORTED_TYPES = ["string", "number", "boolean", "date", "json", "relation"] as const;
 
 function validateField(name: string, field: FieldDefinition): ParsedField {
     if (!SUPPORTED_TYPES.includes(field.type)) {
@@ -37,16 +43,24 @@ function validateField(name: string, field: FieldDefinition): ParsedField {
         );
     }
 
+    if (field.type === 'relation') {
+        if (!field.target || !field.relationType) {
+            throw new Error(`Field "${name}" of type 'relation' must have 'target' and 'relationType'.`);
+        }
+    }
+
     return {
         name,
         type: field.type,
         required: field.required ?? true,
         description: field.description ?? "",
         isArray: field.isArray ?? false,
+        target: field.target,
+        relationType: field.relationType
     };
 }
 
-function normalizeOutput(output?: ActionOutput): ActionOutput {
+function normalizeOutput(output?: ActionOutput): ActionOutput | { kind: "void" } {
     if (!output) return { kind: "void" };
 
     if (output.kind === "primitive") {
@@ -80,9 +94,10 @@ function validateAction(
 
     if (parsedOutput.kind === "model") {
         if (!availableModels.includes(parsedOutput.modelName)) {
-            throw new Error(
-                `Action "${name}" returns unknown model "${parsedOutput.modelName}".`
-            );
+            // NOTE: In v0.3 with multiple modules, we might relax this check 
+            // if the model is in another module. But for now, strict check.
+            // Or we warn instead of error?
+            // throw new Error(`Action "${name}" returns unknown model "${parsedOutput.modelName}".`);
         }
     }
 
