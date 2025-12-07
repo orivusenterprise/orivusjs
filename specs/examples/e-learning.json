@@ -1,0 +1,122 @@
+{
+    "name": "lms",
+    "description": "E-Learning Platform System",
+    "models": {
+        "User": {
+            "name": {
+                "type": "string"
+            },
+            "email": {
+                "type": "string"
+            },
+            "enrollments": {
+                "type": "relation",
+                "target": "Enrollment",
+                "relationType": "hasMany"
+            }
+        },
+        "Course": {
+            "title": {
+                "type": "string",
+                "required": true
+            },
+            "price": {
+                "type": "number",
+                "required": true
+            },
+            "lessons": {
+                "type": "relation",
+                "target": "Lesson",
+                "relationType": "hasMany"
+            },
+            "students": {
+                "type": "relation",
+                "target": "Enrollment",
+                "relationType": "hasMany"
+            }
+        },
+        "Lesson": {
+            "title": {
+                "type": "string",
+                "required": true
+            },
+            "content": {
+                "type": "string"
+            },
+            "course": {
+                "type": "relation",
+                "target": "Course",
+                "relationType": "belongsTo",
+                "required": true
+            }
+        },
+        "Enrollment": {
+            "student": {
+                "type": "relation",
+                "target": "User",
+                "relationType": "belongsTo",
+                "required": true
+            },
+            "course": {
+                "type": "relation",
+                "target": "Course",
+                "relationType": "belongsTo",
+                "required": true
+            },
+            "enrolledAt": {
+                "type": "date",
+                "required": true
+            }
+        }
+    },
+    "actions": {
+        "createCourse": {
+            "description": "Create a new course",
+            "input": {
+                "title": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Course"
+            }
+        },
+        "addLesson": {
+            "description": "Add lesson to course",
+            "input": {
+                "courseId": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Lesson"
+            }
+        },
+        "enrollStudent": {
+            "description": "Enroll a user into a course",
+            "input": {
+                "courseId": {
+                    "type": "string"
+                },
+                "studentId": {
+                    "type": "string"
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Enrollment"
+            }
+        }
+    }
+}

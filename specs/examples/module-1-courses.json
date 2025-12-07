@@ -1,0 +1,33 @@
+{
+    "name": "courses",
+    "models": {
+        "Course": {
+            "title": {
+                "type": "string"
+            },
+            "lessons": {
+                "type": "relation",
+                "target": "Lesson",
+                "relationType": "hasMany"
+            }
+        },
+        "Lesson": {
+            "title": {
+                "type": "string"
+            },
+            "course": {
+                "type": "relation",
+                "target": "Course",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "create": {
+            "output": {
+                "kind": "model",
+                "modelName": "Course"
+            }
+        }
+    }
+}
