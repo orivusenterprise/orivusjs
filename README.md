@@ -1,4 +1,4 @@
-# 🪐 OrivusJS (v0.2 Beta)
+# 🪐 OrivusJS (v0.3.0-alpha)
 
 > **The AI-Native Framework for Building Modern Startups.**  
 > Describe your domain. Generate your backend. Build at the speed of thought.
@@ -140,7 +140,7 @@ OrivusJS handles the rest.
 
 ---
 
-## 🏗️ Architecture (v0.2)
+## 🏗️ Architecture (v0.3)
 
 ```
 src/
@@ -164,18 +164,42 @@ This ensures:
 
 ---
 
-## 🔮 Roadmap to v0.3
+## 🔮 What's New in v0.3.0-alpha
 
-OrivusJS is evolving rapidly toward its first global release.
+**🎉 Relations Engine (Completed)**
+- ✅ Define `hasMany`, `belongsTo`, `hasOne` relations in your Spec
+- ✅ Automatic foreign key generation in Prisma
+- ✅ Smart Prisma Merge - add fields to existing models without breaking code
+- ✅ Support for incremental modular architecture (Micro-Specs)
+
+**Example: E-Learning Platform with Relations**
+```json
+{
+  "models": {
+    "Course": {
+      "lessons": { "type": "relation", "target": "Lesson", "relationType": "hasMany" }
+    },
+    "Lesson": {
+      "course": { "type": "relation", "target": "Course", "relationType": "belongsTo" }
+    }
+  }
+}
+```
+
+See `specs/examples/e-learning.json` for a complete example.
+
+---
+
+## 🚀 Roadmap to v0.4
 
 **Coming next:**
 
-- [ ] **Relations Engine**: One-to-many, many-to-many, and cascade relations defined in Spec.
-- [ ] **CLI v0.3**: `orivus create app <name>` — full project scaffolding.
-- [ ] **AI Spec Generator**: Transform natural language into valid Orivus Specs.
+- [ ] **Frontend Scaffolding**: Auto-generate Next.js forms, tables, and views from Spec
+- [ ] **Unit Testing**: Generate `service.spec.ts` with Prisma mocks
+- [ ] **CLI v0.4**: `orivus create app <name>` — full project scaffolding
+- [ ] **AI Spec Generator**: Transform natural language into valid Orivus Specs
   - *Example*: `orivus ask "Build a CRM with contacts, notes and pipelines"`
-- [ ] **Frontend Scaffolding**: Auto-generate Next.js forms, tables, views and hooks from the Spec.
-- [ ] **Better Testing Strategy**: Auto-generated unit + integration tests with mocking.
+- [ ] **Relation Includes**: Support `include` option in service layer for nested data
 
 These are the foundations for a future where **building a startup is as simple as describing it**.
 
