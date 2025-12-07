@@ -5,6 +5,55 @@ All notable changes to OrivusJS will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [0.4.0-alpha] - 2025-12-07
+
+### 🎉 Major Features
+
+#### Frontend Generator
+- **NEW**: Auto-generate React UI components from ModuleSpec
+  - `CreateFormComponent` - Type-safe forms with tRPC mutations
+  - `ListComponent` - Data tables with loading states
+  - `ScreenComponent` - Full page layouts combining UI components
+- **NEW**: Automatic Next.js App Router integration
+  - Generates `src/app/{module}s/page.tsx` routes
+  - Re-exports domain screens for clean architecture
+- **NEW**: Smart form field generation
+  - Text inputs for strings
+  - Number inputs with proper type coercion
+  - Checkboxes for booleans
+  - Textareas for description/content fields
+  - Date inputs with Zod coercion
+- **NEW**: Built-in UX patterns
+  - Loading states (`mutation.isLoading`)
+  - Error handling (`mutation.error`)
+  - Auto-invalidation of queries on success
+  - Form reset after successful submission
+
+### ✨ Enhancements
+- Added `.min(1)` validation to required string fields in router
+- Improved form template to match tRPC input signature (removed unnecessary wrapper)
+- Enhanced module generator to create `ui/` and `screens/` directories
+- Better field type detection for optimal input elements
+
+### 📚 Documentation
+- Added `specs/tests/frontend-test.json` - Example product catalog spec
+- Updated README with v0.4 features and examples
+- Updated ROADMAP to reflect completed frontend generation
+
+### 🐛 Bug Fixes
+- Fixed form mutation payload structure to match router expectations
+- Fixed optional field handling in forms (no `required` attribute for optional fields)
+- Fixed state initialization types in form components
+
+### 🔧 Internal
+- Created `ui-form.template.ts` for form component generation
+- Created `ui-list.template.ts` for list component generation
+- Created `screen-list.template.ts` for page generation
+- Updated `module-generator.ts` to orchestrate UI generation
+
+---
+
 ## [0.3.0-alpha] - 2025-12-06
 
 ### 🎉 Major Features

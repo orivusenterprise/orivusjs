@@ -13,7 +13,11 @@ export function generateRouterFile(spec: ParsedModuleSpec): string {
                     .map((f) => {
                         let zodType = `z.any()`;
                         switch (f.type) {
-                            case "string": zodType = "z.string()"; break;
+                            case "string":
+                                zodType = "z.string()";
+                                // Add min(1) for required strings to prevent empty submissions
+                                if (f.required) zodType += ".min(1)";
+                                break;
                             case "number": zodType = "z.number()"; break;
                             case "boolean": zodType = "z.boolean()"; break;
                             case "date": zodType = "z.coerce.date()"; break; // Fix: Coerce dates

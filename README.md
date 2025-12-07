@@ -1,4 +1,4 @@
-# 🪐 OrivusJS (v0.3.0-alpha)
+# 🪐 OrivusJS (v0.4.0-alpha)
 
 > **The AI-Native Framework for Building Modern Startups.**  
 > Describe your domain. Generate your backend. Build at the speed of thought.
@@ -140,7 +140,7 @@ OrivusJS handles the rest.
 
 ---
 
-## 🏗️ Architecture (v0.3)
+## 🏗️ Architecture (v0.4)
 
 ```
 src/
@@ -164,42 +164,42 @@ This ensures:
 
 ---
 
-## 🔮 What's New in v0.3.0-alpha
+## 🔮 What's New in v0.4.0-alpha
 
-**🎉 Relations Engine (Completed)**
-- ✅ Define `hasMany`, `belongsTo`, `hasOne` relations in your Spec
-- ✅ Automatic foreign key generation in Prisma
-- ✅ Smart Prisma Merge - add fields to existing models without breaking code
-- ✅ Support for incremental modular architecture (Micro-Specs)
+**🎉 Frontend Generator (Completed)**
+- ✅ Auto-generate React components (Forms, Lists, Screens)
+- ✅ Type-safe tRPC integration with forms
+- ✅ Automatic Next.js App Router pages
+- ✅ Smart field type detection (text, number, checkbox, textarea)
+- ✅ Loading states and error handling built-in
 
-**Example: E-Learning Platform with Relations**
-```json
-{
-  "models": {
-    "Course": {
-      "lessons": { "type": "relation", "target": "Lesson", "relationType": "hasMany" }
-    },
-    "Lesson": {
-      "course": { "type": "relation", "target": "Course", "relationType": "belongsTo" }
-    }
-  }
-}
+**Example: Full-Stack Product Module**
+```bash
+npm run orivus:create specs/examples/product.json
 ```
 
-See `specs/examples/e-learning.json` for a complete example.
+Generates:
+- Backend: `product.router.ts`, `product.service.ts`, `product.schema.ts`
+- Frontend: `CreateProductForm.tsx`, `ProductList.tsx`, `list.page.tsx`
+- Route: `src/app/products/page.tsx` (accessible at `/products`)
+
+**Previous Features (v0.3)**
+- ✅ Relations Engine (`hasMany`, `belongsTo`, `hasOne`)
+- ✅ Smart Prisma Merge (incremental updates)
+- ✅ Automatic foreign key generation
 
 ---
 
-## 🚀 Roadmap to v0.4
+## 🚀 Roadmap to v0.5
 
 **Coming next:**
 
-- [ ] **Frontend Scaffolding**: Auto-generate Next.js forms, tables, and views from Spec
+- [ ] **AI Spec Generator**: Natural language → JSON Spec
+  - *Example*: `orivus ask "Build a task manager with priorities"`
+- [ ] **Advanced UI Components**: Detail/Edit views, pagination, search
+- [ ] **Form Validation**: Client-side Zod validation with error messages
 - [ ] **Unit Testing**: Generate `service.spec.ts` with Prisma mocks
-- [ ] **CLI v0.4**: `orivus create app <name>` — full project scaffolding
-- [ ] **AI Spec Generator**: Transform natural language into valid Orivus Specs
-  - *Example*: `orivus ask "Build a CRM with contacts, notes and pipelines"`
-- [ ] **Relation Includes**: Support `include` option in service layer for nested data
+- [ ] **Deployment Templates**: Docker, Vercel, Railway configs
 
 These are the foundations for a future where **building a startup is as simple as describing it**.
 

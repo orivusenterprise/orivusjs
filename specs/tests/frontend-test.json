@@ -1,0 +1,57 @@
+{
+    "name": "product",
+    "description": "Product catalog management",
+    "models": {
+        "Product": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "price": {
+                "type": "number",
+                "required": true
+            },
+            "description": {
+                "type": "string"
+            },
+            "inStock": {
+                "type": "boolean"
+            }
+        }
+    },
+    "actions": {
+        "create": {
+            "description": "Add a new product",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "price": {
+                    "type": "number",
+                    "required": true
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                },
+                "inStock": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Product"
+            }
+        },
+        "list": {
+            "description": "List all products",
+            "output": {
+                "kind": "model",
+                "modelName": "Product",
+                "isArray": true
+            }
+        }
+    }
+}

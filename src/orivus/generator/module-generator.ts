@@ -4,6 +4,9 @@ import { generateSchemaFile } from "./templates/schema.template";
 import { generateServiceFile } from "./templates/service.template";
 import { generateRouterFile } from "./templates/router.template";
 import { generateTestFile } from "./templates/test.template";
+import { generateFormComponent } from "./templates/ui-form.template";
+import { generateListComponent } from "./templates/ui-list.template";
+import { generateListScreen } from "./templates/screen-list.template";
 // Utils
 import { updatePrismaSchema } from "./utils/updatePrisma";
 import { registerRouter } from "./utils/registerRouter";
@@ -45,6 +48,48 @@ export async function generateModule(spec: ParsedModuleSpec, projectRoot: string
         ]);
 
         console.log(`   - Files created in src/domain/${moduleName}`);
+
+        // 3.5. Generate UI Components (v0.4 Feature)
+        const modelName = spec.models[0].name;
+
+        // Create ui/ directory
+        const uiDir = path.join(moduleDir, "ui");
+        await fs.mkdir(uiDir, { recursive: true });
+
+        // Generate UI components
+        const formContent = generateFormComponent(spec);
+        const listContent = generateListComponent(spec);
+        const uiIndexContent = `export { Create${modelName}Form } from "./Create${modelName}Form";
+export { ${modelName}List } from "./${modelName}List";
+`;
+
+        await Promise.all([
+            writeFileSafely(path.join(uiDir, `Create${modelName}Form.tsx`), formContent),
+            writeFileSafely(path.join(uiDir, `${modelName}List.tsx`), listContent),
+            writeFileSafely(path.join(uiDir, `index.ts`), uiIndexContent),
+        ]);
+
+        console.log(`   - UI components created in src/domain/${moduleName}/ui`);
+
+        // Create screens/ directory
+        const screensDir = path.join(moduleDir, "screens");
+        await fs.mkdir(screensDir, { recursive: true });
+
+        // Generate screen
+        const listScreenContent = generateListScreen(spec);
+        await writeFileSafely(path.join(screensDir, `list.page.tsx`), listScreenContent);
+
+        console.log(`   - Screen created in src/domain/${moduleName}/screens`);
+
+        // Create app router page (Next.js App Router integration)
+        const appDir = path.join(projectRoot, "src/app", moduleName + "s"); // Pluralize for convention
+        await fs.mkdir(appDir, { recursive: true });
+
+        const appPageContent = `export { default } from "@/domain/${moduleName}/screens/list.page";
+`;
+        await writeFileSafely(path.join(appDir, `page.tsx`), appPageContent);
+
+        console.log(`   - App route created at src/app/${moduleName}s/page.tsx`);
 
         // 4. Update Global Configurations (Prisma & Main Router)
         // These are critical sections. If they fail, we might want to warn the user.
