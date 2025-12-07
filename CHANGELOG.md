@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.1-alpha] - 2025-12-07
+
+### 🎉 Major Features
+
+#### Backend-Only Modules
+- **NEW**: `skipUI` option in ModuleSpec
+  - Allows generation of backend-only modules without UI components
+  - Perfect for relation-only modules (e.g., junction tables, enrollment systems)
+  - Generates router, service, schema, and tests but skips UI/screens/routes
+
+### 📚 Documentation
+- Added E2E test specs demonstrating modular architecture:
+  - `specs/examples/e2e-1-user.json` - User domain with UI
+  - `specs/examples/e2e-2-course.json` - Course domain with UI
+  - `specs/examples/e2e-3-enrollment.json` - Enrollment domain (backend-only)
+
+### ✨ Enhancements
+- Module generator now conditionally generates UI based on `skipUI` flag
+- Cleaner console output indicating when UI generation is skipped
+
+### 🔧 Internal
+- Updated `ModuleSpec` type to include optional `skipUI` property
+- Updated `ParsedModuleSpec` to propagate `skipUI` flag
+- Enhanced `module-generator.ts` with conditional UI generation logic
+
+---
+
 ## [0.4.0-alpha] - 2025-12-07
 
 ### 🎉 Major Features

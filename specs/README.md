@@ -1,23 +1,37 @@
-# OrivusJS Spec Examples
+# 📋 OrivusJS Module Specifications
 
-This directory contains Example Specs to help you get started with OrivusJS.
+This directory contains Example Specifications ("Specs") that you can use to generate full-stack modules with OrivusJS.
 
-## 📂 Examples (Ready to use)
-Use these specs to scaffold common application modules.
+## 📂 Example Kits
 
-- **[blog-simple.json](./examples/blog-simple.json)**: A standard Blog Post module with basic CRUD. Good starting point.
+We have organized examples into "Kits" to help you understand different architectural patterns.
 
-## 🧪 Tests (Internal & Advanced)
-These specs cover advanced features and edge cases used for testing the framework itself.
+### 🚀 Starter Kit
+Simple, single-file modules to get you started.
+- **`examples/starter-blog.json`**: A simple blog post module with `title`, `content`, and `published` status.
 
-- **[relation-test.json](./tests/relation-test.json)**: Demonstrates how to define interactions between models (e.g. `hasMany` vs `belongsTo`).
-- **[complex-types.json](./tests/complex-types.json)**: Testing exotic types like Enums, JSON arrays, and Dates.
+### 🏢 SaaS Kit (E-Learning Platform)
+A modular architecture demonstrating how to build a SaaS application with relationships.
+- **`examples/saas-1-user.json`**: User management module.
+- **`examples/saas-2-course.json`**: Course management (related to Users).
+- **`examples/saas-3-enrollment.json`**: Enrollment system connecting Users and Courses. Uses `skipUI: true` (backend-only).
 
-## 🚀 How to Run
+### 💼 App Kit (Project Manager)
+An advanced example demonstrating complex relationships (One-to-Many, Many-to-Many) and modular construction.
+- **`examples/pm-1-project.json`**: Core Project entity.
+- **`examples/pm-2-task.json`**: Tasks belonging to Projects (1:N).
+- **`examples/pm-3-tag.json`**: Global Tags entity.
+- **`examples/pm-4-project-tags.json`**: Junction table for Projects and Tags (N:N). Uses `skipUI: true`.
 
-To generate a module from any of these specs, run:
+## 🛠️ How to Use
+
+Run the following command to generate any of these modules:
 
 ```bash
-# Example: Generate a Blog
-npm run orivus:create specs/examples/blog-simple.json
+npm run orivus:create specs/examples/<filename>.json
+```
+
+For example:
+```bash
+npm run orivus:create specs/examples/starter-blog.json
 ```

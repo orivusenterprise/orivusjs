@@ -1,4 +1,4 @@
-# 🪐 OrivusJS (v0.4.0-alpha)
+# 🪐 OrivusJS (v0.4.1-alpha)
 
 > **The AI-Native Framework for Building Modern Startups.**  
 > Describe your domain. Generate your backend. Build at the speed of thought.
@@ -164,9 +164,30 @@ This ensures:
 
 ---
 
-## 🔮 What's New in v0.4.0-alpha
 
-**🎉 Frontend Generator (Completed)**
+## 🔮 What's New in v0.4.1-alpha
+
+**🎉 Backend-Only Modules (NEW)**
+- ✅ `skipUI` option in ModuleSpec
+- ✅ Generate backend-only modules without UI
+- ✅ Perfect for relation-only modules (e.g., enrollment, junction tables)
+
+**Example: Backend-Only Enrollment Module**
+```json
+{
+  "name": "enrollment",
+  "skipUI": true,
+  "models": {
+    "Enrollment": { ... }
+  }
+}
+```
+
+Generates only:
+- Backend: `enrollment.router.ts`, `enrollment.service.ts`, `enrollment.schema.ts`, `enrollment.test.ts`
+- **NO** UI components or routes
+
+**Previous Features (v0.4.0)**
 - ✅ Auto-generate React components (Forms, Lists, Screens)
 - ✅ Type-safe tRPC integration with forms
 - ✅ Automatic Next.js App Router pages

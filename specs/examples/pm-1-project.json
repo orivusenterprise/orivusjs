@@ -1,55 +1,47 @@
 {
-    "name": "product",
-    "description": "Product catalog management",
+    "name": "project",
+    "description": "Project Management - Core Project Entity",
     "models": {
-        "Product": {
+        "Project": {
             "name": {
                 "type": "string",
                 "required": true
             },
-            "price": {
-                "type": "number",
-                "required": true
-            },
             "description": {
-                "type": "string"
+                "type": "string",
+                "required": false
             },
-            "inStock": {
-                "type": "boolean"
+            "status": {
+                "type": "string",
+                "required": true
             }
         }
     },
     "actions": {
         "create": {
-            "description": "Add a new product",
             "input": {
                 "name": {
                     "type": "string",
-                    "required": true
-                },
-                "price": {
-                    "type": "number",
                     "required": true
                 },
                 "description": {
                     "type": "string",
                     "required": false
                 },
-                "inStock": {
-                    "type": "boolean",
-                    "required": false
+                "status": {
+                    "type": "string",
+                    "required": true
                 }
             },
             "output": {
                 "kind": "model",
-                "modelName": "Product"
+                "modelName": "Project"
             }
         },
         "list": {
-            "description": "List all products",
             "output": {
                 "kind": "model",
-                "modelName": "Product",
+                "modelName": "Project",
                 "isArray": true
             }
         }

@@ -38,4 +38,5 @@ export type ModuleSpec = {
     description?: string;
     models: Record<string, ModelSchema>;
     actions: Record<string, ActionDefinition>;
+    skipUI?: boolean; // v0.4.1: Skip frontend generation for backend-only modules
 };

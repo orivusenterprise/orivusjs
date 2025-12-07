@@ -32,6 +32,7 @@ export type ParsedModuleSpec = {
     moduleName: string;
     models: ParsedModel[];
     actions: ParsedAction[];
+    skipUI?: boolean;
 };
 
 const SUPPORTED_TYPES = ["string", "number", "boolean", "date", "json", "relation"] as const;
@@ -140,5 +141,6 @@ export function parseModuleSpec(spec: ModuleSpec): ParsedModuleSpec {
         moduleName,
         models: parsedModels,
         actions: parsedActions,
+        skipUI: spec.skipUI,
     };
 }

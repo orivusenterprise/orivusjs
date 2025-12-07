@@ -1,0 +1,74 @@
+{
+    "name": "enrollment",
+    "description": "Student enrollment system",
+    "skipUI": true,
+    "models": {
+        "Enrollment": {
+            "student": {
+                "type": "relation",
+                "target": "User",
+                "relationType": "belongsTo",
+                "required": true
+            },
+            "course": {
+                "type": "relation",
+                "target": "Course",
+                "relationType": "belongsTo",
+                "required": true
+            },
+            "enrolledAt": {
+                "type": "date",
+                "required": true
+            },
+            "completed": {
+                "type": "boolean",
+                "required": false
+            }
+        },
+        "User": {
+            "enrollments": {
+                "type": "relation",
+                "target": "Enrollment",
+                "relationType": "hasMany"
+            }
+        },
+        "Course": {
+            "enrollments": {
+                "type": "relation",
+                "target": "Enrollment",
+                "relationType": "hasMany"
+            }
+        }
+    },
+    "actions": {
+        "enrollStudent": {
+            "description": "Enroll a student in a course",
+            "input": {
+                "studentId": {
+                    "type": "string",
+                    "required": true
+                },
+                "courseId": {
+                    "type": "string",
+                    "required": true
+                },
+                "enrolledAt": {
+                    "type": "date",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Enrollment"
+            }
+        },
+        "listEnrollments": {
+            "description": "Get all enrollments",
+            "output": {
+                "kind": "model",
+                "modelName": "Enrollment",
+                "isArray": true
+            }
+        }
+    }
+}

@@ -1,37 +1,37 @@
 {
-    "name": "blog",
-    "description": "Relation test module",
+    "name": "user",
+    "description": "User management system",
     "models": {
         "User": {
             "name": {
                 "type": "string",
                 "required": true
             },
-            "posts": {
-                "type": "relation",
-                "target": "Post",
-                "relationType": "hasMany"
-            }
-        },
-        "Post": {
-            "title": {
+            "email": {
                 "type": "string",
                 "required": true
             },
-            "author": {
-                "type": "relation",
-                "target": "User",
-                "relationType": "belongsTo",
-                "required": true
+            "bio": {
+                "type": "string",
+                "required": false
             }
         }
     },
     "actions": {
         "createUser": {
-            "description": "Create user",
+            "description": "Register a new user",
             "input": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "required": true
+                },
+                "email": {
+                    "type": "string",
+                    "required": true
+                },
+                "bio": {
+                    "type": "string",
+                    "required": false
                 }
             },
             "output": {
@@ -40,6 +40,7 @@
             }
         },
         "listUsers": {
+            "description": "Get all users",
             "output": {
                 "kind": "model",
                 "modelName": "User",

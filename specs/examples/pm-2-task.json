@@ -1,0 +1,54 @@
+{
+    "name": "task",
+    "description": "Project Management - Tasks (BelongsTo Project)",
+    "models": {
+        "Task": {
+            "title": {
+                "type": "string",
+                "required": true
+            },
+            "completed": {
+                "type": "boolean",
+                "required": false
+            },
+            "project": {
+                "type": "relation",
+                "target": "Project",
+                "relationType": "belongsTo",
+                "required": true
+            }
+        },
+        "Project": {
+            "tasks": {
+                "type": "relation",
+                "target": "Task",
+                "relationType": "hasMany"
+            }
+        }
+    },
+    "actions": {
+        "create": {
+            "input": {
+                "title": {
+                    "type": "string",
+                    "required": true
+                },
+                "projectId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Task"
+            }
+        },
+        "list": {
+            "output": {
+                "kind": "model",
+                "modelName": "Task",
+                "isArray": true
+            }
+        }
+    }
+}

@@ -9,7 +9,7 @@ export function registerRouter(spec: ParsedModuleSpec, root: string) {
 
     // Use relative path from src/server/trpc/index.ts to src/domain/...
     // ../../domain/...
-    const importLine = `import { ${spec.moduleName}Router } from "@/domain/${spec.moduleName}/${spec.moduleName}.router";`;
+    const importLine = `import { ${spec.moduleName}Router } from "../../domain/${spec.moduleName}/${spec.moduleName}.router";`;
     const routerLine = `${spec.moduleName}: ${spec.moduleName}Router,`;
 
     if (content.includes(routerLine)) {

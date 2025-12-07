@@ -1,0 +1,41 @@
+{
+    "name": "tag",
+    "description": "Project Management - Global Tags",
+    "models": {
+        "Tag": {
+            "label": {
+                "type": "string",
+                "required": true
+            },
+            "color": {
+                "type": "string",
+                "required": false
+            }
+        }
+    },
+    "actions": {
+        "create": {
+            "input": {
+                "label": {
+                    "type": "string",
+                    "required": true
+                },
+                "color": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Tag"
+            }
+        },
+        "list": {
+            "output": {
+                "kind": "model",
+                "modelName": "Tag",
+                "isArray": true
+            }
+        }
+    }
+}

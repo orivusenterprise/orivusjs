@@ -55,7 +55,7 @@ export function generateServiceFile(spec: ParsedModuleSpec): string {
           prismaOp = "findMany";
         } else {
           // Detectamos intención de crear
-          const isCreate = /^create|add|submit|register/i.test(action.name);
+          const isCreate = /^create|add|submit|register|link/i.test(action.name);
 
           if (isCreate) {
             prismaOp = "create";
