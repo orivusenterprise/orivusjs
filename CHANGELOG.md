@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.2-alpha] - 2025-12-07
+### Added
+- **AI Governance**: Added `AI_RULES.md` as a universal system prompt for LLMs working on the project.
+- **Documentation**: New `/docs` page integrated into the framework.
+- **Testing Stability**: Improved test templates to gracefully handle foreign key constraints and avoid duplicate tests.
+
+### Fixed
+- **Service Generation**: "Link" actions now correctly infer `create` logic instead of `findFirst`.
+- **Relationship Tests**: Fixed generated tests for modules with required relations.
+
 ## [0.4.1-alpha] - 2025-12-07
 
 ### 🎉 Major Features
