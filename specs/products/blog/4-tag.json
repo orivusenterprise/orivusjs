@@ -1,0 +1,86 @@
+{
+    "name": "tag",
+    "description": "Tags for categorizing posts",
+    "models": {
+        "Tag": {
+            "name": {
+                "type": "string",
+                "required": true,
+                "description": "Tag name (e.g., 'javascript', 'tutorial')"
+            },
+            "slug": {
+                "type": "string",
+                "required": true,
+                "description": "URL-friendly identifier"
+            },
+            "description": {
+                "type": "string",
+                "required": false,
+                "description": "Brief description of the tag"
+            },
+            "posts": {
+                "type": "relation",
+                "target": "Post",
+                "relationType": "manyToMany",
+                "description": "Posts that have this tag"
+            }
+        }
+    },
+    "actions": {
+        "createTag": {
+            "description": "Create a new tag",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "slug": {
+                    "type": "string",
+                    "required": true
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Tag"
+            }
+        },
+        "listTags": {
+            "description": "Get all tags",
+            "output": {
+                "kind": "model",
+                "modelName": "Tag",
+                "isArray": true
+            }
+        },
+        "getTag": {
+            "description": "Get a tag by slug",
+            "input": {
+                "slug": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Tag"
+            }
+        },
+        "deleteTag": {
+            "description": "Delete a tag",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

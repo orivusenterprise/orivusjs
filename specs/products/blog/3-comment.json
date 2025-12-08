@@ -1,0 +1,98 @@
+{
+    "name": "comment",
+    "description": "Comments on blog posts",
+    "models": {
+        "Comment": {
+            "content": {
+                "type": "string",
+                "required": true,
+                "description": "The comment text"
+            },
+            "approved": {
+                "type": "boolean",
+                "required": false,
+                "description": "Whether the comment is approved for display"
+            },
+            "post": {
+                "type": "relation",
+                "target": "Post",
+                "relationType": "belongsTo",
+                "required": true,
+                "description": "The post this comment belongs to"
+            },
+            "author": {
+                "type": "relation",
+                "target": "User",
+                "relationType": "belongsTo",
+                "required": true,
+                "description": "The user who wrote this comment"
+            }
+        }
+    },
+    "actions": {
+        "createComment": {
+            "description": "Add a comment to a post",
+            "input": {
+                "content": {
+                    "type": "string",
+                    "required": true
+                },
+                "postId": {
+                    "type": "string",
+                    "required": true,
+                    "description": "ID of the post being commented on"
+                },
+                "authorId": {
+                    "type": "string",
+                    "required": true,
+                    "description": "ID of the commenting user"
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Comment"
+            }
+        },
+        "listComments": {
+            "description": "Get all comments (optionally filtered by post)",
+            "input": {
+                "postId": {
+                    "type": "string",
+                    "required": false,
+                    "description": "Filter by post ID"
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Comment",
+                "isArray": true
+            }
+        },
+        "approveComment": {
+            "description": "Approve a comment for display",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Comment"
+            }
+        },
+        "deleteComment": {
+            "description": "Delete a comment",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

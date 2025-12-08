@@ -65,8 +65,8 @@ export function generateTestFile(spec: ParsedModuleSpec): string {
 
     const listTestBlock = listMethodName ? `
         // 2. Test Action: ${listMethodName}
-        // If list action has no input, pass nothing
-        const list = await caller.${moduleName}.${listMethodName}();
+        // Pass empty object if action has input schema (even if all optional)
+        const list = await caller.${moduleName}.${listMethodName}(${listAction?.input ? '{}' : ''});
         expect(list).toBeInstanceOf(Array);` : "";
 
     return `import { describe, it, expect, beforeAll, afterAll } from "vitest";

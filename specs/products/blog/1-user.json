@@ -1,0 +1,88 @@
+{
+    "name": "user",
+    "description": "User management - Authors who can create posts and comments",
+    "models": {
+        "User": {
+            "name": {
+                "type": "string",
+                "required": true,
+                "description": "Display name of the user"
+            },
+            "email": {
+                "type": "string",
+                "required": true,
+                "description": "Unique email address"
+            },
+            "bio": {
+                "type": "string",
+                "required": false,
+                "description": "Short biography"
+            },
+            "avatar": {
+                "type": "string",
+                "required": false,
+                "description": "URL to avatar image"
+            },
+            "posts": {
+                "type": "relation",
+                "target": "Post",
+                "relationType": "hasMany",
+                "description": "Posts created by this user"
+            },
+            "comments": {
+                "type": "relation",
+                "target": "Comment",
+                "relationType": "hasMany",
+                "description": "Comments made by this user"
+            }
+        }
+    },
+    "actions": {
+        "createUser": {
+            "description": "Register a new user",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "email": {
+                    "type": "string",
+                    "required": true
+                },
+                "bio": {
+                    "type": "string",
+                    "required": false
+                },
+                "avatar": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "User"
+            }
+        },
+        "listUsers": {
+            "description": "Get all registered users",
+            "output": {
+                "kind": "model",
+                "modelName": "User",
+                "isArray": true
+            }
+        },
+        "getUser": {
+            "description": "Get a single user by ID",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "User"
+            }
+        }
+    }
+}

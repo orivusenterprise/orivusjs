@@ -1,48 +1,95 @@
 import fs from "fs";
 import path from "path";
-import { ParsedModuleSpec } from "../../core/spec-parser";
+import { ParsedModuleSpec, ParsedModel } from "../../core/spec-parser";
 import { generatePrismaModel } from "../templates/prisma-model.template";
+
+/**
+ * Adds a field to an existing Prisma model in the schema file.
+ * Returns the updated file content.
+ */
+function addFieldToModel(file: string, modelName: string, fieldLine: string): string {
+    const regex = new RegExp(`(model\\s+${modelName}\\s+\\{[\\s\\S]*?)(\\})`, 'm');
+    const match = file.match(regex);
+
+    if (!match) {
+        console.warn(`⚠️ Prisma: model ${modelName} not found for inverse relation injection.`);
+        return file;
+    }
+
+    const existingBody = match[1];
+    const fieldName = fieldLine.trim().split(/\s+/)[0];
+
+    // Check if field already exists
+    const fieldRegex = new RegExp(`^\\s*${fieldName}\\s+`, 'm');
+    if (fieldRegex.test(existingBody)) {
+        return file; // Field already exists
+    }
+
+    // Insert before closing brace
+    const newBlock = existingBody + fieldLine + "\n}";
+    return file.replace(match[0], newBlock);
+}
+
+/**
+ * Infers the inverse relation field name for a belongsTo relation.
+ * Example: Post.author (belongsTo User) -> User.posts (hasMany Post)
+ */
+function inferInverseFieldName(childModelName: string): string {
+    // Simple pluralization: Post -> posts, Category -> categorys (not perfect but functional)
+    return childModelName.charAt(0).toLowerCase() + childModelName.slice(1) + "s";
+}
 
 export function updatePrismaSchema(spec: ParsedModuleSpec, root: string) {
     const prismaPath = path.join(root, "prisma/schema.prisma");
     let file = fs.readFileSync(prismaPath, "utf-8");
 
+    // Track inverse relations that need to be added to parent models
+    const inverseRelations: { parentModel: string; fieldLine: string }[] = [];
+
     spec.models.forEach(model => {
         const modelDefinition = generatePrismaModel(model);
 
-        // Añadir modelo si no existe
-        if (!file.includes(`model ${model.name} `)) {
+        // Detect belongsTo relations to schedule inverse relation injection
+        model.fields.forEach(field => {
+            if (field.type === "relation" && field.relationType === "belongsTo" && field.target) {
+                const parentModel = field.target;
+                const childModel = model.name;
+                const inverseFieldName = inferInverseFieldName(childModel);
+
+                // The inverse relation: User.posts Post[]
+                inverseRelations.push({
+                    parentModel,
+                    fieldLine: `  ${inverseFieldName} ${childModel}[]`
+                });
+            }
+        });
+
+        // Add model if doesn't exist
+        if (!file.includes(`model ${model.name} {`) && !file.includes(`model ${model.name}  {`)) {
             file += `\n${modelDefinition}`;
             console.log(`🟦 Prisma: modelo ${model.name} añadido.`);
         } else {
-            // v0.3 Smart Merge: Inject missing fields (like relations) into existing models
+            // v0.3 Smart Merge: Inject missing fields into existing models
             const regex = new RegExp(`model\\s+${model.name}\\s+\\{([\\s\\S]*?)\\}`, 'm');
             const match = file.match(regex);
 
             if (match) {
-                const existingContent = match[0]; // Full block including braces
-                const existingBody = match[1];    // Content inside braces
+                const existingContent = match[0];
+                const existingBody = match[1];
 
-                // Parse generated definition to extract potential new lines
-                // generatePrismaModel returns: "\nmodel Name {\n  field ... \n}\n"
-                // Split by newline and filter interesting lines
                 const newLines = modelDefinition.split('\n')
-                    .map(l => l.trimEnd()) // Keep indentation but trim end
+                    .map(l => l.trimEnd())
                     .filter(l => l.trim().length > 0 && !l.startsWith("model ") && !l.startsWith("}"));
 
                 let linesToAdd: string[] = [];
 
                 for (const line of newLines) {
                     const trimmed = line.trim();
-                    // Skip comments or block attributes for now, focus on fields
                     if (!trimmed || trimmed.startsWith('//') || trimmed.startsWith('@@')) continue;
 
-                    // Extract field name (first word)
                     const fieldName = trimmed.split(/\s+/)[0];
                     if (!fieldName) continue;
 
-                    // Check if field exists in existing body (naive regex but robust enough for Prisma)
-                    // Matches "  fieldName Type..." or "fieldName Type..."
                     const fieldRegex = new RegExp(`^\\s*${fieldName}\\s+`, 'm');
                     if (!fieldRegex.test(existingBody)) {
                         linesToAdd.push(line);
@@ -50,16 +97,24 @@ export function updatePrismaSchema(spec: ParsedModuleSpec, root: string) {
                 }
 
                 if (linesToAdd.length > 0) {
-                    // Insert new lines before the closing brace
                     const insertion = linesToAdd.join('\n');
                     const newBlock = existingContent.replace(/}\s*$/, `${insertion}\n}`);
-
                     file = file.replace(existingContent, newBlock);
                     console.log(`🔄 Prisma: updated ${model.name} with ${linesToAdd.length} new fields: ${linesToAdd.map(l => l.trim().split(' ')[0]).join(', ')}`);
                 } else {
                     console.log(`🟨 Prisma: model ${model.name} is up to date.`);
                 }
             }
+        }
+    });
+
+    // 🔧 NEW: Inject inverse relations into parent models
+    inverseRelations.forEach(({ parentModel, fieldLine }) => {
+        const oldFile = file;
+        file = addFieldToModel(file, parentModel, fieldLine);
+        if (file !== oldFile) {
+            const fieldName = fieldLine.trim().split(/\s+/)[0];
+            console.log(`🔗 Prisma: added inverse relation ${parentModel}.${fieldName}`);
         }
     });
 

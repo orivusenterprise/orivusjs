@@ -1,49 +1,97 @@
-# 🗺️ OrivusJS Roadmap
+# 🗺️ OrivusJS Technical Roadmap
 
-Welcome to the future of AI-Native Development. This document outlines the strategic path for OrivusJS.
+This roadmap outlines the path from v0.4 (Current) to v1.0 (AI-Native Singularity).
 
-## ✅ Completed (v0.4.0-alpha)
-- **Core Generator**: Parse `ModuleSpec` (JSON) and generate strict TypeScript code.
-- **Full-Stack Scaffolding**: Schema (Zod), Service (Prisma), Router (tRPC).
-- **Auto-Discovery**: Automatic registration of routers in the main application.
-- **Database Sync**: Automatic `prisma db push` on module generation.
-- **Auto-Test Generation**: Basic integration tests (Vitest) generated alongside code.
-- **CLI**: `npm run orivus:create <file>` command.
-- **Relations Engine**: Support for `hasMany`, `belongsTo`, `hasOne` relations in Spec.
-- **Smart Prisma Merge**: Incremental module generation with automatic field injection.
-- **Multi-Model Support**: Process all models in a spec, not just the first one.
-- **Frontend Generator**: Auto-generate React UI components (Forms, Lists, Screens).
-- **Next.js Integration**: Automatic App Router page generation.
-- **Type-Safe Forms**: tRPC-integrated forms with Zod validation.
-
-## 🚧 Next Milestone (v0.5 - The "AI-Native" Update)
-*Priority: High*
-
-### 1. AI Spec Generator
-- [ ] Natural language to JSON Spec conversion using LLM
-- [ ] `orivus ask "Build a task manager with priorities"` command
-- [ ] Spec validation and optimization by AI
-- [ ] Interactive spec refinement
-
-### 2. Advanced UI Components
-- [ ] Detail/Edit views for individual records
-- [ ] Pagination and infinite scroll for lists
-- [ ] Search and filter components
-- [ ] Client-side form validation with Zod
-
-### 3. Testing Maturity
-- [ ] **Unit Tests**: Generate `service.spec.ts` files that test logic in isolation (mocking Prisma)
-- [ ] **Advanced Mocking**: Improve test templates to handle complex types (Dates, Enums, Arrays) robustly without manual intervention
-
-### 4. Advanced Relations
-- [ ] Support for `include` option in service layer for nested data fetching
-- [ ] Many-to-many relation support with junction tables
-- [ ] Cascade delete options in Spec
-
-## 🔭 Future Vision (v1.0)
-- **Natural Language CLI**: `orivus ask "I need an invoicing module"` -> Generates Spec -> Generates Code.
-- **Vector Database Integration**: Native support for embeddings and vector search generation.
-- **Plugin System**: Allow community templates (e.g., Generate GraphQL instead of tRPC).
+## ✅ Completed Milestones
+- [x] **v0.1 - v0.3**: Core CLI, Prisma Generation, tRPC Routers.
+- [x] **v0.4.0**: Frontend Generation (React Components, Next.js Pages).
+- [x] **v0.4.1**: Backend-Only Modules (`skipUI`), Smart Merge Logic.
+- [x] **v0.4.2**: AI Governance (`AI_RULES.md`), Documentation (`/docs`), Test Stability.
 
 ---
-*Last Updated: December 2025*
+
+## 🚨 Phase 0: Stability First (NEW)
+*Goal: The framework must "just work" before adding advanced features.*
+
+### 🔹 v0.4.3: The Stability Release (CURRENT PRIORITY)
+**Motivation**: *"A framework that fails on a simple blog cannot promise AI-Native capabilities."*
+
+Focus on testing, validation, and reliability:
+- [ ] **Template Test Suite**: Unit tests for every template (Prisma, Schema, Router, Service, UI)
+- [ ] **Spec Validator**: Validate specs BEFORE generation with clear error messages
+- [ ] **E2E Generation Test**: `npm run orivus:e2e-test specs/products/blog` proves the pipeline works
+- [ ] **Better Error Messages**: Replace cryptic Prisma/tRPC errors with actionable guidance
+- [ ] **Blog Platform**: Must generate with zero manual intervention
+
+**Success Criteria**:
+```bash
+npm run orivus:e2e-test specs/products/blog
+# ✅ Spec validation passed (4 modules)
+# ✅ Generation completed (16 files)  
+# ✅ All tests passed (4/4)
+# ✅ Blog Platform ready at http://localhost:3000
+```
+
+📄 See [docs/v0.4.3-STABILITY-PLAN.md](./docs/v0.4.3-STABILITY-PLAN.md) for full implementation plan.
+
+---
+
+## 🏗️ Phase 1: Solid Foundation (UX & Production)
+*Goal: Ensure the generated code is "Senior Developer" quality before adding heavy AI.*
+
+### 🔹 v0.5.0: The Cohesive UI & Kernel Genesis
+Focus on usability and the birth of the Intelligence Engine.
+- **Orivus Kernel (Internal)**: A new core library that maps the entire schema graph to understand relationships deeply.
+- **Smart Relations UI**: Powered by the Kernel, automatically generate `<Select>`/Combobox inputs for foreign keys.
+- **Auto-Navigation**: Inject links into a dynamic Sidebar/AppShell.
+- **Enhanced UI Templates**: Professional Look & Feel.
+
+### 🔹 v0.6.0: The Kernel Service & Production Layer
+Focus on AI-readiness and deployment.
+- **Orivus Kernel (Service)**: Expose the "Context Protocol" (`orivus:context`). Generates a Project Map for Cursor/LLMs.
+- **Auth Scaffolding**: Standardize `protectedProcedure` and `ctx.session`.
+- **Role-Based Access**: Support roles in Specs.
+- **Deployment Ready**: Docker support.
+
+---
+
+## 🧠 Phase 2: The Intelligence Layer
+*Goal: Make the framework "speak" the language of LLMs facilitated by local context.*
+
+### 🔹 v0.7.0: The Context Protocol
+- **command `orivus:context`**: Generates a high-density "Project Map" (Markdown/JSON) optimized for LLM Context Windows.
+- **Benefits**: Allows Cursor/Windsurf/Copilot to understand the entire project state instantly without reading every file.
+
+### 🔹 v0.8.0: The Prompt Interface (NL-to-Spec)
+- **command `orivus prompt "..."`**: 
+- Integration with LLMs (Cloud or Local/Ollama) to generate valid JSON Specs from natural language descriptions.
+
+---
+
+## 🤖 Phase 3: The Singularity (Autonomous)
+*Goal: Self-maintaining codebases.*
+
+### 🔹 v0.9.0: Self-Healing
+- **Auto-Fixer Agents**: If `npm run test` fails, the CLI analyzes the stack trace and patches the implementation or test.
+- **Smart Seeding**: Auto-generate realistic mock data for local development based on schema constraints.
+
+### 🏆 v1.0.0: General Availability
+- Full Stability.
+- Plugin Ecosystem.
+- The first truly AI-Native Full-Stack Framework.
+
+---
+
+## 📊 Key Metrics
+
+| Version | Key Deliverable | Status |
+|---------|-----------------|--------|
+| v0.4.3 | Blog generates first-try | 🔴 In Progress |
+| v0.5.0 | Kernel + Smart Relations | ⬜ Planned |
+| v0.6.0 | Context Protocol | ⬜ Planned |
+| v0.7.0 | NL-to-Spec | ⬜ Planned |
+| v1.0.0 | GA Release | ⬜ Future |
+
+---
+
+> *"The best framework is one that disappears — you describe what you want, and it just works."*

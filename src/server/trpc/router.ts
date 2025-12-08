@@ -1,4 +1,4 @@
-import { postRouter } from "@/domain/post/post.router";
+
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { Context } from "./context";
 

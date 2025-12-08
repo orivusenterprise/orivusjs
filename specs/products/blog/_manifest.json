@@ -1,0 +1,57 @@
+{
+    "$schema": "orivus-product-manifest",
+    "name": "Blog Platform",
+    "version": "1.0.0",
+    "description": "A complete blog platform with users, posts, comments, and tags. This is the canonical example to validate OrivusJS generation pipeline.",
+    "modules": [
+        {
+            "file": "1-user.json",
+            "order": 1,
+            "required": true,
+            "description": "Core user entity - authors of posts and comments"
+        },
+        {
+            "file": "2-post.json",
+            "order": 2,
+            "required": true,
+            "description": "Blog posts with relation to author (User)"
+        },
+        {
+            "file": "3-comment.json",
+            "order": 3,
+            "required": false,
+            "description": "Comments on posts with relation to Post and User"
+        },
+        {
+            "file": "4-tag.json",
+            "order": 4,
+            "required": false,
+            "description": "Tags for categorizing posts (many-to-many)"
+        }
+    ],
+    "executionOrder": [
+        "1-user.json",
+        "2-post.json",
+        "3-comment.json",
+        "4-tag.json"
+    ],
+    "relationGraph": {
+        "User": {
+            "posts": "hasMany -> Post",
+            "comments": "hasMany -> Comment"
+        },
+        "Post": {
+            "author": "belongsTo -> User",
+            "comments": "hasMany -> Comment",
+            "tags": "manyToMany -> Tag"
+        },
+        "Comment": {
+            "post": "belongsTo -> Post",
+            "author": "belongsTo -> User"
+        },
+        "Tag": {
+            "posts": "manyToMany -> Post"
+        }
+    },
+    "testCommand": "npm run orivus:create specs/products/blog/1-user.json && npm run orivus:create specs/products/blog/2-post.json"
+}

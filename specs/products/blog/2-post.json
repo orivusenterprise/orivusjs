@@ -1,0 +1,150 @@
+{
+    "name": "post",
+    "description": "Blog posts - Main content created by users",
+    "models": {
+        "Post": {
+            "title": {
+                "type": "string",
+                "required": true,
+                "description": "Post title"
+            },
+            "slug": {
+                "type": "string",
+                "required": true,
+                "description": "URL-friendly identifier"
+            },
+            "content": {
+                "type": "string",
+                "required": true,
+                "description": "Main content of the post (markdown supported)"
+            },
+            "excerpt": {
+                "type": "string",
+                "required": false,
+                "description": "Short summary for listings"
+            },
+            "published": {
+                "type": "boolean",
+                "required": false,
+                "description": "Whether the post is publicly visible"
+            },
+            "publishedAt": {
+                "type": "date",
+                "required": false,
+                "description": "When the post was published"
+            },
+            "author": {
+                "type": "relation",
+                "target": "User",
+                "relationType": "belongsTo",
+                "required": true,
+                "description": "The user who wrote this post"
+            },
+            "comments": {
+                "type": "relation",
+                "target": "Comment",
+                "relationType": "hasMany",
+                "description": "Comments on this post"
+            }
+        }
+    },
+    "actions": {
+        "createPost": {
+            "description": "Create a new blog post",
+            "input": {
+                "title": {
+                    "type": "string",
+                    "required": true
+                },
+                "slug": {
+                    "type": "string",
+                    "required": true
+                },
+                "content": {
+                    "type": "string",
+                    "required": true
+                },
+                "excerpt": {
+                    "type": "string",
+                    "required": false
+                },
+                "published": {
+                    "type": "boolean",
+                    "required": false
+                },
+                "authorId": {
+                    "type": "string",
+                    "required": true,
+                    "description": "ID of the author (User)"
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Post"
+            }
+        },
+        "listPosts": {
+            "description": "Get all posts (optionally filtered by published status)",
+            "output": {
+                "kind": "model",
+                "modelName": "Post",
+                "isArray": true
+            }
+        },
+        "getPost": {
+            "description": "Get a single post by ID or slug",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": false
+                },
+                "slug": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Post"
+            }
+        },
+        "updatePost": {
+            "description": "Update an existing post",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "title": {
+                    "type": "string",
+                    "required": false
+                },
+                "content": {
+                    "type": "string",
+                    "required": false
+                },
+                "published": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Post"
+            }
+        },
+        "deletePost": {
+            "description": "Delete a post",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

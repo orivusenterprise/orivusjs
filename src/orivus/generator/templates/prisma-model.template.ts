@@ -18,8 +18,11 @@ export function generatePrismaModel(model: ParsedModel): string {
             const relationType = f.relationType || "hasMany"; // Default fallback
 
             if (relationType === "hasMany") {
-                // posts Post[]
-                lines.push(`  ${f.name} ${targetModel}[]`);
+                // 🔧 FIX: Skip hasMany relations during initial model generation.
+                // The target model doesn't exist yet. The inverse relation will be
+                // added to the parent model when the child model (with belongsTo) is created.
+                // Example: User.posts will be added when Post (with author belongsTo User) is generated.
+                return; // Skip - will be handled by updatePrisma when child is created
             } else if (relationType === "belongsTo") {
                 // author User @relation(...)
                 const fkName = `${f.name}Id`;
@@ -37,6 +40,10 @@ export function generatePrismaModel(model: ParsedModel): string {
                 // profile Profile?
                 const optionalMod = !f.required ? "?" : "";
                 lines.push(`  ${f.name} ${targetModel}${optionalMod}`);
+            } else if (relationType === "manyToMany") {
+                // 🔧 FIX: Skip manyToMany during initial generation.
+                // Junction tables or implicit relations need both models to exist first.
+                return; // Skip - requires both models to exist
             }
 
             return; // Done with relation

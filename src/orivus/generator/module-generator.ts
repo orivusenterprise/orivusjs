@@ -14,6 +14,7 @@ import { registerRouter } from "./utils/registerRouter";
 import fs from "fs/promises";
 import path from "path";
 import { writeFileSafely } from "./utils/writeFile";
+import { registerNavigation } from "./utils/registerNavigation";
 
 /**
  * Orchestrates the generation of a full domain module.
@@ -104,6 +105,10 @@ export { ${modelName}List } from "./${modelName}List";
 
         await registerRouter(spec, projectRoot);
         console.log(`   - Global router registered.`);
+
+        if (!spec.skipUI) {
+            registerNavigation(spec, projectRoot);
+        }
 
         // 5. Sync Database (Prisma DB Push)
         // This ensures the new model actually exists in the DB so it can be used immediately.

@@ -43,7 +43,8 @@ function mapToZodType(field: ParsedField): string {
     }
 
     if (!field.required) {
-        zodType += ".optional()";
+        // Use .nullish() to handle both null (from Prisma) and undefined
+        zodType += ".nullish()";
     }
 
     return zodType;

@@ -2,14 +2,13 @@ import { ParsedModuleSpec, ParsedField } from "../../core/spec-parser";
 
 /**
  * Generates a List component for a module
- * Following the pattern from src/domain/user/ui/UserList.tsx
+ * Uses global UI components.
  */
 export function generateListComponent(spec: ParsedModuleSpec): string {
     const model = spec.models[0];
     const modelName = model.name;
     const moduleName = spec.moduleName;
 
-    // Find the list action
     const listAction = spec.actions.find(a =>
         a.name.toLowerCase().includes('list') ||
         a.name.toLowerCase().includes('all') ||
@@ -22,40 +21,61 @@ export function generateListComponent(spec: ParsedModuleSpec): string {
 
     const actionName = listAction.name;
 
-    // Get displayable fields (exclude timestamps, ids, etc.)
     const displayFields = model.fields.filter(f =>
         !f.name.toLowerCase().includes('id') &&
         !f.name.toLowerCase().includes('createdat') &&
         !f.name.toLowerCase().includes('updatedat') &&
-        f.type !== 'relation' // Don't display relations in simple list
-    ).slice(0, 3); // Show max 3 fields
+        f.type !== 'relation'
+    ).slice(0, 3);
 
-    // Generate field displays
     const fieldDisplays = displayFields.map((field, index) => {
-        const className = index === 0 ? 'font-medium' : 'text-sm text-gray-500';
-        return `                        <div className="${className}">{${moduleName}.${field.name}}</div>`;
+        const className = index === 0 ? 'font-medium' : 'text-sm text-muted-foreground';
+        return `                                <p className="${className}">{item.${field.name}}</p>`;
     }).join('\n');
+
+    // Determine strict title field
+    const potentialTitleFields = ['name', 'title', 'subject', 'label', 'headline', 'email', 'slug'];
+    const titleField = model.fields.find(f => potentialTitleFields.includes(f.name.toLowerCase()));
+    const titleExpression = titleField ? `item.${titleField.name}` : `"${modelName} #" + item.id`;
+
+    // Pass empty object if action has input schema (even if all fields optional)
+    const hasInput = listAction.input && listAction.input.length > 0;
+    const queryArg = hasInput ? '{}' : '';
 
     return `"use client";
 
 import { trpc } from "@/utils/trpc";
+import { Card, CardHeader, CardTitle, CardContent } from "@orivus-ui/components/Card";
 
 export function ${modelName}List() {
-    const { data: ${moduleName}s, isLoading } = trpc.${moduleName}.${actionName}.useQuery();
+    const { data: items, isLoading } = trpc.${moduleName}.${actionName}.useQuery(${queryArg});
 
-    if (isLoading) return <div>Loading ${moduleName.toLowerCase()}s...</div>;
+    if (isLoading) return <div className="p-4 text-muted-foreground">Loading ${moduleName}s...</div>;
+
+    if (!items || items.length === 0) {
+        return (
+            <Card>
+                <CardContent className="pt-6 text-center text-muted-foreground">
+                    No ${moduleName}s found.
+                </CardContent>
+            </Card>
+        );
+    }
 
     return (
-        <div className="space-y-4">
-            <h2 className="text-xl font-semibold">${modelName} List</h2>
-            <ul className="space-y-2">
-                {${moduleName}s?.map((${moduleName}) => (
-                    <li key={${moduleName}.id} className="p-4 bg-white rounded shadow border border-gray-100">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {items.map((item) => (
+                <Card key={item.id} className="hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">{${titleExpression}}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-1">
 ${fieldDisplays}
-                    </li>
-                ))}
-            </ul>
-            {${moduleName}s?.length === 0 && <p className="text-gray-500">No ${moduleName.toLowerCase()}s found.</p>}
+                        </div>
+                    </CardContent>
+                </Card>
+            ))}
         </div>
     );
 }
