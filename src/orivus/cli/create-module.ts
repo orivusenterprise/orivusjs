@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { generateFromSpec } from "../generator/index";
 import { ModuleSpec } from "../core/module-spec";
+import { validateSpec, formatValidationResult } from "../core/spec-validator";
 
 async function main() {
     const args = process.argv.slice(2);
@@ -31,22 +32,43 @@ async function main() {
         const fileContent = fs.readFileSync(specPath, "utf-8");
         const spec: ModuleSpec = JSON.parse(fileContent);
 
-        // Basic Validation
-        if (!spec.name || !spec.models || !spec.actions) {
-            console.error("❌ Invalid Spec Format. Missing 'name', 'models', or 'actions'.");
+        // =====================================================
+        // v0.4.3: Spec Validation BEFORE generation
+        // =====================================================
+        console.log("\n🔍 Validating spec...");
+        const validation = validateSpec(spec);
+
+        if (!validation.valid) {
+            console.error("\n" + formatValidationResult(validation));
+            console.error("\n💡 Fix the errors above and try again.");
             process.exit(1);
         }
 
-        console.log(`✅ Valid Spec found for module: "${spec.name}"`);
+        // Show warnings but continue
+        if (validation.warnings.length > 0) {
+            console.log("\n" + formatValidationResult(validation));
+            console.log("\n⚠️  Proceeding with generation despite warnings...\n");
+        } else {
+            console.log("✅ Spec validation passed");
+        }
+
+        console.log(`\n📦 Generating module: "${spec.name}"`);
 
         // Execute Generator
         await generateFromSpec(spec);
 
     } catch (error: any) {
-        console.error("❌ Error processing spec:");
-        console.error(error.message);
+        if (error instanceof SyntaxError) {
+            console.error("❌ Invalid JSON in spec file:");
+            console.error(`   ${error.message}`);
+            console.error("\n💡 Check for trailing commas or missing quotes in your JSON file.");
+        } else {
+            console.error("❌ Error processing spec:");
+            console.error(error.message);
+        }
         process.exit(1);
     }
 }
 
 main();
+
