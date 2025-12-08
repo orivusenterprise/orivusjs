@@ -1,0 +1,151 @@
+{
+    "name": "course",
+    "description": "Online courses",
+    "models": {
+        "Course": {
+            "title": {
+                "type": "string",
+                "required": true,
+                "description": "Course title"
+            },
+            "slug": {
+                "type": "string",
+                "required": true,
+                "description": "URL-friendly identifier"
+            },
+            "description": {
+                "type": "string",
+                "required": false,
+                "description": "Course description"
+            },
+            "price": {
+                "type": "number",
+                "required": true,
+                "description": "Course price in cents"
+            },
+            "published": {
+                "type": "boolean",
+                "required": false,
+                "description": "Is course publicly available"
+            },
+            "thumbnailUrl": {
+                "type": "string",
+                "required": false,
+                "description": "Course thumbnail image"
+            },
+            "instructor": {
+                "type": "relation",
+                "target": "Instructor",
+                "relationType": "belongsTo",
+                "description": "Course creator"
+            },
+            "lessons": {
+                "type": "relation",
+                "target": "Lesson",
+                "relationType": "hasMany",
+                "description": "Lessons in this course"
+            },
+            "enrollments": {
+                "type": "relation",
+                "target": "Enrollment",
+                "relationType": "hasMany",
+                "description": "Student enrollments"
+            }
+        }
+    },
+    "actions": {
+        "createCourse": {
+            "description": "Create a new course",
+            "input": {
+                "title": {
+                    "type": "string",
+                    "required": true
+                },
+                "slug": {
+                    "type": "string",
+                    "required": true
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                },
+                "price": {
+                    "type": "number",
+                    "required": true
+                },
+                "published": {
+                    "type": "boolean",
+                    "required": false
+                },
+                "thumbnailUrl": {
+                    "type": "string",
+                    "required": false
+                },
+                "instructorId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Course"
+            }
+        },
+        "listCourses": {
+            "description": "Get all published courses",
+            "input": {
+                "published": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Course",
+                "isArray": true
+            }
+        },
+        "getCourse": {
+            "description": "Get course by slug",
+            "input": {
+                "slug": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Course"
+            }
+        },
+        "updateCourse": {
+            "description": "Update course details",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "title": {
+                    "type": "string",
+                    "required": false
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                },
+                "price": {
+                    "type": "number",
+                    "required": false
+                },
+                "published": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Course"
+            }
+        }
+    }
+}

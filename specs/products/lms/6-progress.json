@@ -1,0 +1,90 @@
+{
+    "name": "progress",
+    "description": "Lesson completion progress",
+    "skipUI": true,
+    "models": {
+        "Progress": {
+            "completed": {
+                "type": "boolean",
+                "required": false,
+                "description": "Is lesson completed"
+            },
+            "completedAt": {
+                "type": "date",
+                "required": false,
+                "description": "Completion timestamp"
+            },
+            "watchedSeconds": {
+                "type": "number",
+                "required": false,
+                "description": "Seconds watched"
+            },
+            "enrollment": {
+                "type": "relation",
+                "target": "Enrollment",
+                "relationType": "belongsTo",
+                "description": "Parent enrollment"
+            },
+            "lesson": {
+                "type": "relation",
+                "target": "Lesson",
+                "relationType": "belongsTo",
+                "description": "Lesson being tracked"
+            }
+        }
+    },
+    "actions": {
+        "trackProgress": {
+            "description": "Update lesson progress",
+            "input": {
+                "enrollmentId": {
+                    "type": "string",
+                    "required": true
+                },
+                "lessonId": {
+                    "type": "string",
+                    "required": true
+                },
+                "watchedSeconds": {
+                    "type": "number",
+                    "required": false
+                },
+                "completed": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Progress"
+            }
+        },
+        "getProgress": {
+            "description": "Get progress for enrollment",
+            "input": {
+                "enrollmentId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Progress",
+                "isArray": true
+            }
+        },
+        "completeLesson": {
+            "description": "Mark a lesson as completed",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Progress"
+            }
+        }
+    }
+}

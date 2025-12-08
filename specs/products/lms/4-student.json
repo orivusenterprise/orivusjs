@@ -1,0 +1,73 @@
+{
+    "name": "student",
+    "description": "LMS students",
+    "models": {
+        "Student": {
+            "name": {
+                "type": "string",
+                "required": true,
+                "description": "Student full name"
+            },
+            "email": {
+                "type": "string",
+                "required": true,
+                "description": "Student email"
+            },
+            "avatar": {
+                "type": "string",
+                "required": false,
+                "description": "Profile picture URL"
+            },
+            "enrollments": {
+                "type": "relation",
+                "target": "Enrollment",
+                "relationType": "hasMany",
+                "description": "Course enrollments"
+            }
+        }
+    },
+    "actions": {
+        "createStudent": {
+            "description": "Register a new student",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "email": {
+                    "type": "string",
+                    "required": true
+                },
+                "avatar": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Student"
+            }
+        },
+        "listStudents": {
+            "description": "Get all students",
+            "output": {
+                "kind": "model",
+                "modelName": "Student",
+                "isArray": true
+            }
+        },
+        "getStudent": {
+            "description": "Get student by ID",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Student"
+            }
+        }
+    }
+}

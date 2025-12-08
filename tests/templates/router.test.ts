@@ -190,7 +190,7 @@ describe("router.template", () => {
             expect(result).toContain("startDate: z.coerce.date()");
         });
 
-        it("skips input schema for actions without input", () => {
+        it("adds empty input schema for query actions without input fields", () => {
             const spec = createSpec({
                 actions: [{
                     name: "listUsers",
@@ -200,9 +200,8 @@ describe("router.template", () => {
 
             const result = generateRouterFile(spec);
 
-            // Should NOT have .input(...)
-            expect(result).not.toContain("listUsers: publicProcedure.input");
-            expect(result).toContain("listUsers: publicProcedure.output");
+            // Queries always have input for UI compatibility
+            expect(result).toContain("listUsers: publicProcedure.input(z.object({}))");
         });
     });
 

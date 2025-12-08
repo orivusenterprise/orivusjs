@@ -1,0 +1,86 @@
+{
+    "name": "enrollment",
+    "description": "Student course enrollments",
+    "skipUI": true,
+    "models": {
+        "Enrollment": {
+            "enrolledAt": {
+                "type": "date",
+                "required": false,
+                "description": "Enrollment date"
+            },
+            "completedAt": {
+                "type": "date",
+                "required": false,
+                "description": "Completion date"
+            },
+            "status": {
+                "type": "string",
+                "required": false,
+                "description": "active, completed, cancelled"
+            },
+            "student": {
+                "type": "relation",
+                "target": "Student",
+                "relationType": "belongsTo",
+                "description": "Enrolled student"
+            },
+            "course": {
+                "type": "relation",
+                "target": "Course",
+                "relationType": "belongsTo",
+                "description": "Enrolled course"
+            }
+        }
+    },
+    "actions": {
+        "enrollStudent": {
+            "description": "Enroll a student in a course",
+            "input": {
+                "studentId": {
+                    "type": "string",
+                    "required": true
+                },
+                "courseId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Enrollment"
+            }
+        },
+        "listEnrollments": {
+            "description": "Get all enrollments",
+            "input": {
+                "studentId": {
+                    "type": "string",
+                    "required": false
+                },
+                "courseId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Enrollment",
+                "isArray": true
+            }
+        },
+        "completeEnrollment": {
+            "description": "Mark enrollment as completed",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Enrollment"
+            }
+        }
+    }
+}

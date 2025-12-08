@@ -72,7 +72,7 @@ describe("ui-list.template", () => {
     });
 
     describe("Query Input Handling", () => {
-        it("passes {} for actions WITH input", () => {
+        it("always passes {} for list queries - for UI compatibility", () => {
             const spec = createSpec({
                 actions: [{
                     name: "listUsers",
@@ -86,7 +86,7 @@ describe("ui-list.template", () => {
             expect(result).toContain("useQuery({})");
         });
 
-        it("passes nothing for actions WITHOUT input", () => {
+        it("passes {} even for actions WITHOUT input", () => {
             const spec = createSpec({
                 actions: [{
                     name: "listUsers",
@@ -96,8 +96,8 @@ describe("ui-list.template", () => {
 
             const result = generateListComponent(spec);
 
-            expect(result).toContain("useQuery()");
-            expect(result).not.toContain("useQuery({})");
+            // All queries now pass {} for tRPC/UI consistency
+            expect(result).toContain("useQuery({})");
         });
     });
 

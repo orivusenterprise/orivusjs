@@ -1,0 +1,135 @@
+{
+    "name": "lesson",
+    "description": "Course lessons/modules",
+    "models": {
+        "Lesson": {
+            "title": {
+                "type": "string",
+                "required": true,
+                "description": "Lesson title"
+            },
+            "content": {
+                "type": "string",
+                "required": false,
+                "description": "Lesson content (markdown)"
+            },
+            "videoUrl": {
+                "type": "string",
+                "required": false,
+                "description": "Video URL"
+            },
+            "duration": {
+                "type": "number",
+                "required": false,
+                "description": "Duration in minutes"
+            },
+            "order": {
+                "type": "number",
+                "required": true,
+                "description": "Order in course"
+            },
+            "isFree": {
+                "type": "boolean",
+                "required": false,
+                "description": "Is this a free preview lesson"
+            },
+            "course": {
+                "type": "relation",
+                "target": "Course",
+                "relationType": "belongsTo",
+                "description": "Parent course"
+            }
+        }
+    },
+    "actions": {
+        "createLesson": {
+            "description": "Add a lesson to a course",
+            "input": {
+                "title": {
+                    "type": "string",
+                    "required": true
+                },
+                "content": {
+                    "type": "string",
+                    "required": false
+                },
+                "videoUrl": {
+                    "type": "string",
+                    "required": false
+                },
+                "duration": {
+                    "type": "number",
+                    "required": false
+                },
+                "order": {
+                    "type": "number",
+                    "required": true
+                },
+                "isFree": {
+                    "type": "boolean",
+                    "required": false
+                },
+                "courseId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Lesson"
+            }
+        },
+        "listLessons": {
+            "description": "Get lessons for a course",
+            "input": {
+                "courseId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Lesson",
+                "isArray": true
+            }
+        },
+        "getLesson": {
+            "description": "Get lesson by ID",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Lesson"
+            }
+        },
+        "updateLesson": {
+            "description": "Update lesson content",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "title": {
+                    "type": "string",
+                    "required": false
+                },
+                "content": {
+                    "type": "string",
+                    "required": false
+                },
+                "videoUrl": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Lesson"
+            }
+        }
+    }
+}

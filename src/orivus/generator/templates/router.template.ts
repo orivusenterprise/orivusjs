@@ -8,8 +8,23 @@ export function generateRouterFile(spec: ParsedModuleSpec): string {
             // 1. Robust Input Schema Generation
             // We reuse the logic from schema.template (conceptually) or implement a mini-mapper here
             // to ensure special types like Date are coerced properly.
-            const inputSchema = action.input
-                ? `.input(z.object({${action.input
+
+            // Determine if this is a query (will need to accept {} from UI)
+            const lowerName = action.name.toLowerCase();
+            const isMutationAction = lowerName.startsWith("create") ||
+                lowerName.startsWith("add") ||
+                lowerName.startsWith("update") ||
+                lowerName.startsWith("delete") ||
+                lowerName.startsWith("save") ||
+                lowerName.startsWith("apply") ||
+                lowerName.startsWith("enroll") ||
+                lowerName.startsWith("track") ||
+                lowerName.startsWith("complete");
+
+            let inputSchema: string;
+            if (action.input && action.input.length > 0) {
+                // Has input fields - generate schema from fields
+                inputSchema = `.input(z.object({${action.input
                     .map((f) => {
                         let zodType = `z.any()`;
                         switch (f.type) {
@@ -27,8 +42,14 @@ export function generateRouterFile(spec: ParsedModuleSpec): string {
                         if (!f.required) zodType += ".optional()";
                         return `${f.name}: ${zodType}`;
                     })
-                    .join(",")}}))`
-                : "";
+                    .join(",")}}))`;
+            } else if (!isMutationAction) {
+                // Query without input - still accept empty object for UI compatibility
+                inputSchema = ".input(z.object({}))";
+            } else {
+                // Mutation without input - should be rare but allow it
+                inputSchema = "";
+            }
 
             const output =
                 action.output.kind === "primitive"
@@ -39,15 +60,7 @@ export function generateRouterFile(spec: ParsedModuleSpec): string {
 
             // 2. Heuristic for Query vs Mutation
             // If name suggests modification, use mutation. Default to query.
-            const lowerName = action.name.toLowerCase();
-            const isMutation = lowerName.startsWith("create") ||
-                lowerName.startsWith("add") ||
-                lowerName.startsWith("update") ||
-                lowerName.startsWith("delete") ||
-                lowerName.startsWith("save") ||
-                lowerName.startsWith("apply"); // Specific for this case
-
-            const procedureType = isMutation ? "mutation" : "query";
+            const procedureType = isMutationAction ? "mutation" : "query";
 
             return `  ${action.name}: publicProcedure${inputSchema}${output}.${procedureType}(async ({ input }) => {
       return ${spec.moduleName}Service.${action.name}(input);

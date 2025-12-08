@@ -93,7 +93,7 @@ describe("test.template", () => {
             expect(result).toContain("caller.user.listUsers({})");
         });
 
-        it("passes nothing for list actions WITHOUT input", () => {
+        it("passes {} for list actions WITHOUT input too - for tRPC consistency", () => {
             const spec = createSpec({
                 actions: [
                     {
@@ -110,8 +110,8 @@ describe("test.template", () => {
 
             const result = generateTestFile(spec);
 
-            // Should NOT pass {} because action has no input
-            expect(result).toContain("caller.user.listUsers()");
+            // All query procedures now accept {} for consistency
+            expect(result).toContain("caller.user.listUsers({})");
         });
     });
 

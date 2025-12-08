@@ -86,11 +86,16 @@ This release focuses on testing, validation, and reliability. The Blog Platform 
 ### E2E Test Result
 
 ```
-✅ PASSED: Blog Platform
-   Modules: 4
-   Tests: 12/12
-   Duration: 25s
+✅ PASSED: Blog Platform (4 modules)
+✅ PASSED: SaaS LMS (6 modules)
+   Tests: 14/14
+   Duration: 231s
 ```
+
+### Fixed (Hotfixes post-Blog)
+- Improved regex for `create`/`update`/`delete` detection (support for grouping)
+- Added support for `enroll`, `track`, `complete` keywords in action detection
+- Fixed empty input handling in tRPC routers and UI templates (`useQuery({})`)
 
 ---
 

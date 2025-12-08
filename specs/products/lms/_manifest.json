@@ -1,0 +1,40 @@
+{
+    "$schema": "orivus-product-manifest",
+    "name": "SaaS LMS",
+    "version": "1.0.0",
+    "description": "Learning Management System with courses, lessons, enrollments, and progress tracking",
+    "executionOrder": [
+        "1-instructor.json",
+        "2-course.json",
+        "3-lesson.json",
+        "4-student.json",
+        "5-enrollment.json",
+        "6-progress.json"
+    ],
+    "relationGraph": {
+        "Instructor": {
+            "courses": "hasMany -> Course"
+        },
+        "Course": {
+            "instructor": "belongsTo -> Instructor",
+            "lessons": "hasMany -> Lesson",
+            "enrollments": "hasMany -> Enrollment"
+        },
+        "Lesson": {
+            "course": "belongsTo -> Course",
+            "progress": "hasMany -> Progress"
+        },
+        "Student": {
+            "enrollments": "hasMany -> Enrollment"
+        },
+        "Enrollment": {
+            "student": "belongsTo -> Student",
+            "course": "belongsTo -> Course",
+            "progress": "hasMany -> Progress"
+        },
+        "Progress": {
+            "enrollment": "belongsTo -> Enrollment",
+            "lesson": "belongsTo -> Lesson"
+        }
+    }
+}

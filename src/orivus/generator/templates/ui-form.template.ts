@@ -52,9 +52,9 @@ export function generateFormComponent(spec: ParsedModuleSpec): string {
     });
 
     // 2. Generate Relation Queries
+    // Always pass {} because the target list action may have optional filters
     const relationQueries = relationFields.map(({ field, targetModule }) => {
-        // Find the appropriate list action name (listUsers, list, etc.)
-        return `    const { data: ${field.name}Options, isLoading: is${capitalize(field.name)}Loading } = trpc.${targetModule}.list${capitalize(targetModule)}s.useQuery();`;
+        return `    const { data: ${field.name}Options, isLoading: is${capitalize(field.name)}Loading } = trpc.${targetModule}.list${capitalize(targetModule)}s.useQuery({});`;
     }).join('\n');
 
     // 3. Create a set of relation field names for quick lookup

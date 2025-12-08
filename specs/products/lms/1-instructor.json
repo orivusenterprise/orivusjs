@@ -1,0 +1,91 @@
+{
+    "name": "instructor",
+    "description": "Course instructors/creators",
+    "models": {
+        "Instructor": {
+            "name": {
+                "type": "string",
+                "required": true,
+                "description": "Instructor full name"
+            },
+            "email": {
+                "type": "string",
+                "required": true,
+                "description": "Instructor email"
+            },
+            "bio": {
+                "type": "string",
+                "required": false,
+                "description": "Short biography"
+            },
+            "avatar": {
+                "type": "string",
+                "required": false,
+                "description": "Profile picture URL"
+            },
+            "expertise": {
+                "type": "string",
+                "required": false,
+                "description": "Area of expertise"
+            },
+            "courses": {
+                "type": "relation",
+                "target": "Course",
+                "relationType": "hasMany",
+                "description": "Courses created by this instructor"
+            }
+        }
+    },
+    "actions": {
+        "createInstructor": {
+            "description": "Register a new instructor",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "email": {
+                    "type": "string",
+                    "required": true
+                },
+                "bio": {
+                    "type": "string",
+                    "required": false
+                },
+                "avatar": {
+                    "type": "string",
+                    "required": false
+                },
+                "expertise": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Instructor"
+            }
+        },
+        "listInstructors": {
+            "description": "Get all instructors",
+            "output": {
+                "kind": "model",
+                "modelName": "Instructor",
+                "isArray": true
+            }
+        },
+        "getInstructor": {
+            "description": "Get instructor by ID",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Instructor"
+            }
+        }
+    }
+}

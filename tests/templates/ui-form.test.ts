@@ -97,7 +97,7 @@ describe("ui-form.template", () => {
             // Should generate RelationSelect for authorId
             expect(result).toContain("RelationSelect");
             expect(result).toContain("authorIdOptions");
-            expect(result).toContain("trpc.user.listUsers.useQuery()");
+            expect(result).toContain("trpc.user.listUsers.useQuery({})");
         });
 
         it("does NOT detect regular string fields as FK", () => {

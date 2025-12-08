@@ -60,9 +60,9 @@ export function generateServiceFile(spec: ParsedModuleSpec): string {
           prismaOp = "findMany";
         } else {
           // Single model actions
-          const isCreate = /^create|add|submit|register|link/i.test(actionLower);
-          const isUpdate = /^update|edit|modify|patch/i.test(actionLower);
-          const isApprove = /^approve|activate|enable|disable|toggle/i.test(actionLower);
+          const isCreate = /^(create|add|submit|register|link|enroll|track)/i.test(actionLower);
+          const isUpdate = /^(update|edit|modify|patch|complete)/i.test(actionLower);
+          const isApprove = /^(approve|activate|enable|disable|toggle)/i.test(actionLower);
 
           // Build where clause from input fields (use first field if not 'id')
           const inputFields = action.input || [];
@@ -97,7 +97,7 @@ export function generateServiceFile(spec: ParsedModuleSpec): string {
 
         if (outputType === "boolean") {
           // Delete actions typically return boolean
-          const isDelete = /^delete|remove|destroy/i.test(actionLower);
+          const isDelete = /^(delete|remove|destroy)/i.test(actionLower);
 
           if (isDelete) {
             prismaOp = "delete";

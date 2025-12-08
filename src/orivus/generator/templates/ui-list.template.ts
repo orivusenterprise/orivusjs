@@ -38,9 +38,9 @@ export function generateListComponent(spec: ParsedModuleSpec): string {
     const titleField = model.fields.find(f => potentialTitleFields.includes(f.name.toLowerCase()));
     const titleExpression = titleField ? `item.${titleField.name}` : `"${modelName} #" + item.id`;
 
-    // Pass empty object if action has input schema (even if all fields optional)
-    const hasInput = listAction.input && listAction.input.length > 0;
-    const queryArg = hasInput ? '{}' : '';
+    // Always pass {} for consistency - tRPC accepts empty objects
+    // This prevents "Expected N arguments but got 0" when input is defined
+    const queryArg = '{}';
 
     return `"use client";
 

@@ -65,8 +65,8 @@ export function generateTestFile(spec: ParsedModuleSpec): string {
 
     const listTestBlock = listMethodName ? `
         // 2. Test Action: ${listMethodName}
-        // Pass empty object if action has input schema (even if all optional)
-        const list = await caller.${moduleName}.${listMethodName}(${listAction?.input ? '{}' : ''});
+        // All query procedures now accept {} for consistency
+        const list = await caller.${moduleName}.${listMethodName}({});
         expect(list).toBeInstanceOf(Array);` : "";
 
     return `import { describe, it, expect, beforeAll, afterAll } from "vitest";
