@@ -5,189 +5,124 @@ All notable changes to OrivusJS will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+---
 
-## [0.4.2-alpha] - 2025-12-07
+## [0.4.3-alpha] - 2025-12-08
+
+### 🎯 Theme: "The Stability Release"
+
+> *"A framework that fails on a simple blog cannot promise AI-Native capabilities."*
+
+This release focuses on testing, validation, and reliability. The Blog Platform now generates successfully with a single command.
+
 ### Added
-- **AI Governance**: Added `AI_RULES.md` as a universal system prompt for LLMs working on the project.
-- **Documentation**: New `/docs` page integrated into the framework.
-- **Testing Stability**: Improved test templates to gracefully handle foreign key constraints and avoid duplicate tests.
+
+- **Template Test Suite** (96 tests)
+  - `prisma-model.template`: 9 tests (relations, field types)
+  - `schema.template`: 12 tests (type mapping, nullish, FKs)
+  - `router.template`: 19 tests (procedure types, input/output schemas)
+  - `service.template`: 17 tests (Prisma operations, input signatures)
+  - `ui-form.template`: 14 tests (FK detection, state, field rendering)
+  - `ui-list.template`: 13 tests (query input, title detection)
+  - `test.template`: 12 tests (action detection, mock data, FK errors)
+
+- **Spec Validator** (23 tests)
+  - Validates specs BEFORE generation
+  - Clear error messages with suggestions
+  - Warnings for non-critical issues
+  - Integration with CLI
+
+- **E2E Test Command**
+  - `npm run orivus:e2e-test <product-path>`
+  - Validates all specs
+  - Generates all modules in order
+  - Runs TypeScript check
+  - Runs all tests
+  - Reports results with timing
+
+- **Blog Platform Spec** (`specs/products/blog/`)
+  - Canonical example with 4 modules
+  - User, Post, Comment, Tag with relations
+  - Product manifest for execution order
+
+- **Documentation**
+  - `LLM_PERSPECTIVE.md`: AI feedback on framework design
+  - `docs/v0.4.3-STABILITY-PLAN.md`: Implementation plan
 
 ### Fixed
-- **Service Generation**: "Link" actions now correctly infer `create` logic instead of `findFirst`.
-- **Relationship Tests**: Fixed generated tests for modules with required relations.
 
-## [0.4.1-alpha] - 2025-12-07
+- **prisma-model.template**
+  - Skip `hasMany` relations during initial generation
+  - Inject inverse relations when child model created
+  - Skip `manyToMany` (not yet fully supported)
 
-### 🎉 Major Features
+- **updatePrisma.ts**
+  - Auto-inject inverse `hasMany` relations
 
-#### Backend-Only Modules
-- **NEW**: `skipUI` option in ModuleSpec
-  - Allows generation of backend-only modules without UI components
-  - Perfect for relation-only modules (e.g., junction tables, enrollment systems)
-  - Generates router, service, schema, and tests but skips UI/screens/routes
+- **schema.template**
+  - Use `nullish()` instead of `optional()` for Prisma compatibility
+  - Prisma returns `null`, not `undefined`
 
-### 📚 Documentation
-- Added E2E test specs demonstrating modular architecture:
-  - `specs/examples/e2e-1-user.json` - User domain with UI
-  - `specs/examples/e2e-2-course.json` - Course domain with UI
-  - `specs/examples/e2e-3-enrollment.json` - Enrollment domain (backend-only)
+- **service.template** (major rewrite)
+  - `findFirst` → `findFirstOrThrow` (ensures non-null return)
+  - `delete` actions now properly use `prisma.delete` with boolean result
+  - `update` actions use `prisma.update` with where clause
+  - Smart `where` clause from actual input fields (not just `id`)
 
-### ✨ Enhancements
-- Module generator now conditionally generates UI based on `skipUI` flag
-- Cleaner console output indicating when UI generation is skipped
+- **ui-form.template**
+  - Detect `*Id` fields as FK and generate RelationSelect
 
-### 🔧 Internal
-- Updated `ModuleSpec` type to include optional `skipUI` property
-- Updated `ParsedModuleSpec` to propagate `skipUI` flag
-- Enhanced `module-generator.ts` with conditional UI generation logic
+- **ui-list.template**
+  - Pass `{}` for actions with optional input
 
----
+- **test.template**
+  - Pass `{}` for list actions with optional input
 
-## [0.4.0-alpha] - 2025-12-07
+### Changed
 
-### 🎉 Major Features
+- **ROADMAP.md**: Added "Phase 0: Stability" before Kernel/Context
+- **CLI**: Now validates specs before generation with clear error messages
 
-#### Frontend Generator
-- **NEW**: Auto-generate React UI components from ModuleSpec
-  - `CreateFormComponent` - Type-safe forms with tRPC mutations
-  - `ListComponent` - Data tables with loading states
-  - `ScreenComponent` - Full page layouts combining UI components
-- **NEW**: Automatic Next.js App Router integration
-  - Generates `src/app/{module}s/page.tsx` routes
-  - Re-exports domain screens for clean architecture
-- **NEW**: Smart form field generation
-  - Text inputs for strings
-  - Number inputs with proper type coercion
-  - Checkboxes for booleans
-  - Textareas for description/content fields
-  - Date inputs with Zod coercion
-- **NEW**: Built-in UX patterns
-  - Loading states (`mutation.isLoading`)
-  - Error handling (`mutation.error`)
-  - Auto-invalidation of queries on success
-  - Form reset after successful submission
+### E2E Test Result
 
-### ✨ Enhancements
-- Added `.min(1)` validation to required string fields in router
-- Improved form template to match tRPC input signature (removed unnecessary wrapper)
-- Enhanced module generator to create `ui/` and `screens/` directories
-- Better field type detection for optimal input elements
-
-### 📚 Documentation
-- Added `specs/tests/frontend-test.json` - Example product catalog spec
-- Updated README with v0.4 features and examples
-- Updated ROADMAP to reflect completed frontend generation
-
-### 🐛 Bug Fixes
-- Fixed form mutation payload structure to match router expectations
-- Fixed optional field handling in forms (no `required` attribute for optional fields)
-- Fixed state initialization types in form components
-
-### 🔧 Internal
-- Created `ui-form.template.ts` for form component generation
-- Created `ui-list.template.ts` for list component generation
-- Created `screen-list.template.ts` for page generation
-- Updated `module-generator.ts` to orchestrate UI generation
+```
+✅ PASSED: Blog Platform
+   Modules: 4
+   Tests: 12/12
+   Duration: 25s
+```
 
 ---
 
-## [0.3.0-alpha] - 2025-12-06
+## [0.4.2-alpha] - 2025-12-07
 
-### 🎉 Major Features
-
-#### Relations Engine
-- **NEW**: Support for database relations in ModuleSpec
-  - `hasMany` - One-to-many relationships (e.g., User has many Posts)
-  - `belongsTo` - Many-to-one relationships (e.g., Post belongs to User)
-  - `hasOne` - One-to-one relationships
-- **NEW**: Automatic foreign key generation in Prisma schema
-- **NEW**: Relation-aware Zod schema generation (generates FK fields, avoids circular dependencies)
-
-#### Smart Prisma Merge
-- **NEW**: Incremental module generation without breaking existing code
-- **NEW**: Automatic field injection into existing models
-- **NEW**: Support for modular "Micro-Specs" architecture
-- **BREAKING**: Multi-model support in single spec (previously only first model was processed)
-
-### ✨ Enhancements
-- Improved `updatePrisma.ts` to iterate through all models in spec
-- Enhanced `prisma-model.template.ts` with relation syntax generation
-- Updated `schema.template.ts` to handle relation types intelligently
-- Better error messages and logging during generation
-
-### 📚 Documentation
-- Added `specs/v0.3-design.md` - Technical design document for Relations Engine
-- Added example specs:
-  - `specs/examples/e-learning.json` - Complex multi-model LMS example
-  - `specs/examples/module-1-courses.json` - Micro-spec demonstration (Part 1)
-  - `specs/examples/module-2-enrollment.json` - Micro-spec demonstration (Part 2)
-- Reorganized `specs/` folder with `examples/` and `tests/` subdirectories
-- Added `specs/README.md` explaining spec organization
-
-### 🐛 Bug Fixes
-- Fixed Prisma schema update to process all models, not just the first one
-- Fixed Zod type mapping for `relation` fields
-- Improved spec parser validation for relation-specific properties
-
-### 🔧 Internal
-- Updated type definitions in `module-spec.ts` to include `RelationType`
-- Enhanced `spec-parser.ts` with relation field validation
-- Added support for `target` and `relationType` in `FieldDefinition`
+### Added
+- AI Governance (`AI_RULES.md`)
+- In-app documentation (`/docs`)
+- Test stabilization for relational modules
 
 ---
 
-## [0.2.0] - 2025-12-06
+## [0.4.1-alpha] - Previous
 
-### 🎉 Major Features
-
-#### Core Generator
-- **NEW**: Full backend generation from JSON ModuleSpec
-- **NEW**: Automatic Prisma schema generation and database sync
-- **NEW**: Zod validation schema generation with type inference
-- **NEW**: tRPC router generation with type-safe endpoints
-- **NEW**: Service layer generation with Prisma integration
-- **NEW**: Integration test generation (Vitest)
-
-#### CLI
-- **NEW**: `npm run orivus:create <spec.json>` command
-- **NEW**: Automatic router registration in main tRPC router
-- **NEW**: Auto-sync database after generation (`prisma db push --accept-data-loss`)
-
-### ✨ Enhancements
-- Support for complex data types: `string`, `number`, `boolean`, `date`, `json`
-- Array field support with `isArray` flag
-- Optional/required field handling
-- Auto-injection of standard fields (`id`, `createdAt`, `updatedAt`)
-- SQLite compatibility (maps `json` type to `String` for compatibility)
-
-### 📚 Documentation
-- Professional README.md with AI-Native positioning
-- ROADMAP.md outlining future development
-- Example specs in `specs/` directory
-- Clear installation and quick start guide
-
-### 🔧 Internal
-- Established modular architecture in `src/orivus/`
-- Created template system for code generation
-- Implemented spec parser with validation
-- Set up utility functions for file operations and Prisma updates
+### Added
+- Backend-only modules (`skipUI`)
+- Smart merge logic for Prisma schema
 
 ---
 
-## [0.1.0] - 2025-11-30
+## [0.4.0-alpha] - Previous
 
-### 🎉 Initial Release
-- Basic Next.js + tRPC + Prisma setup
-- Manual User domain implementation
-- Architecture documentation
-- Testing infrastructure with Vitest
+### Added
+- Frontend generation (React components, Next.js pages)
+- Initial UI templates
 
 ---
 
-## Legend
-- 🎉 Major Features
-- ✨ Enhancements
-- 🐛 Bug Fixes
-- 📚 Documentation
-- 🔧 Internal/Technical
-- ⚠️ Breaking Changes
+## [0.1.0 - 0.3.0] - Previous
+
+### Added
+- Core CLI
+- Prisma generation
+- tRPC routers
+- Spec-driven development foundation

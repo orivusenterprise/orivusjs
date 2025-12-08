@@ -1,4 +1,4 @@
-# 🪐 OrivusJS (v0.4.2-alpha)
+# 🪐 OrivusJS (v0.4.3-alpha)
 
 > **The AI-Native Framework for Building Modern Startups.**  
 > Describe your domain. Generate your backend. Build at the speed of thought.
@@ -165,49 +165,52 @@ This ensures:
 ---
 
 
-## 🔮 What's New in v0.4.1-alpha
+## 🔮 What's New in v0.4.3-alpha
 
-**🎉 Backend-Only Modules (NEW)**
-- ✅ `skipUI` option in ModuleSpec
-- ✅ Generate backend-only modules without UI
-- ✅ Perfect for relation-only modules (e.g., enrollment, junction tables)
+### 🎯 The Stability Release
 
-**Example: Backend-Only Enrollment Module**
-```json
-{
-  "name": "enrollment",
-  "skipUI": true,
-  "models": {
-    "Enrollment": { ... }
-  }
-}
-```
+> *"A framework that fails on a simple blog cannot promise AI-Native capabilities."*
 
-Generates only:
-- Backend: `enrollment.router.ts`, `enrollment.service.ts`, `enrollment.schema.ts`, `enrollment.test.ts`
-- **NO** UI components or routes
+**🧪 Template Tests (119 tests)**
+- 96 tests for all generation templates
+- 23 tests for spec validation
+- Complete coverage of edge cases
 
-**Previous Features (v0.4.0)**
-- ✅ Auto-generate React components (Forms, Lists, Screens)
-- ✅ Type-safe tRPC integration with forms
-- ✅ Automatic Next.js App Router pages
-- ✅ Smart field type detection (text, number, checkbox, textarea)
-- ✅ Loading states and error handling built-in
+**✅ Spec Validator**
+- Validates specs BEFORE generation
+- Clear error messages with suggestions
+- Catches common mistakes early
 
-**Example: Full-Stack Product Module**
+**🚀 E2E Test Command**
 ```bash
-npm run orivus:create specs/examples/product.json
+npm run orivus:e2e-test specs/products/blog
+```
+Tests the entire generation pipeline in one command!
+
+**📦 Blog Platform Example**
+- Canonical 4-module product (User, Post, Comment, Tag)
+- Demonstrates relations and full pipeline
+- Located in `specs/products/blog/`
+
+**E2E Test Result:**
+```
+✅ PASSED: Blog Platform
+   Modules: 4
+   Tests: 12/12
+   Duration: 25s
 ```
 
-Generates:
-- Backend: `product.router.ts`, `product.service.ts`, `product.schema.ts`
-- Frontend: `CreateProductForm.tsx`, `ProductList.tsx`, `list.page.tsx`
-- Route: `src/app/products/page.tsx` (accessible at `/products`)
+---
 
-**Previous Features (v0.3)**
-- ✅ Relations Engine (`hasMany`, `belongsTo`, `hasOne`)
-- ✅ Smart Prisma Merge (incremental updates)
-- ✅ Automatic foreign key generation
+### Previous Features
+
+**v0.4.2** - AI Governance (`AI_RULES.md`), In-app docs
+
+**v0.4.1** - Backend-only modules (`skipUI`)
+
+**v0.4.0** - Frontend generation (React, Next.js pages)
+
+**v0.3** - Relations Engine (`hasMany`, `belongsTo`, `hasOne`)
 
 ---
 
