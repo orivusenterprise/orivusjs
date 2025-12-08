@@ -43,6 +43,7 @@
     },
     "actions": {
         "createLesson": {
+            "type": "create",
             "description": "Add a lesson to a course",
             "input": {
                 "title": {
@@ -80,6 +81,7 @@
             }
         },
         "listLessons": {
+            "type": "list",
             "description": "Get lessons for a course",
             "input": {
                 "courseId": {
@@ -94,6 +96,7 @@
             }
         },
         "getLesson": {
+            "type": "get",
             "description": "Get lesson by ID",
             "input": {
                 "id": {
@@ -107,6 +110,7 @@
             }
         },
         "updateLesson": {
+            "type": "update",
             "description": "Update lesson content",
             "input": {
                 "id": {

@@ -107,6 +107,8 @@ npm run orivus:create specs/products/blog/2-post.json
     },
     "actions": {
         "actionName": {             // camelCase
+            "type": "create",       // v0.4.4+ (Recommended): Explicit operation type
+                                    // create|update|delete|list|get|count|custom
             "description": "What it does",
             "input": { /* fields */ },
             "output": {

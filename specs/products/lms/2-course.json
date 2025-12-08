@@ -55,6 +55,7 @@
     },
     "actions": {
         "createCourse": {
+            "type": "create",
             "description": "Create a new course",
             "input": {
                 "title": {
@@ -92,6 +93,7 @@
             }
         },
         "listCourses": {
+            "type": "list",
             "description": "Get all published courses",
             "input": {
                 "published": {
@@ -106,6 +108,7 @@
             }
         },
         "getCourse": {
+            "type": "get",
             "description": "Get course by slug",
             "input": {
                 "slug": {
@@ -119,6 +122,7 @@
             }
         },
         "updateCourse": {
+            "type": "update",
             "description": "Update course details",
             "input": {
                 "id": {

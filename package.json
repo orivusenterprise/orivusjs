@@ -1,6 +1,6 @@
 {
   "name": "orivusjs",
-  "version": "0.4.3-alpha",
+  "version": "0.4.4-alpha",
   "private": true,
   "scripts": {
     "orivus:gen": "npx tsx src/orivus/cli/generate-router.ts",

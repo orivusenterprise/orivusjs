@@ -250,6 +250,9 @@ function validateField(
     }
 }
 
+// Add constant for valid action types
+const VALID_ACTION_TYPES = ['create', 'update', 'delete', 'list', 'get', 'count', 'custom'];
+
 function validateActions(spec: ModuleSpec, errors: ValidationError[], warnings: ValidationWarning[]): void {
     const actionNames = Object.keys(spec.actions);
     const modelNames = Object.keys(spec.models || {});
@@ -257,6 +260,18 @@ function validateActions(spec: ModuleSpec, errors: ValidationError[], warnings: 
     actionNames.forEach(actionName => {
         const action = spec.actions[actionName];
         const actionPath = `actions.${actionName}`;
+
+        // Validate explicit type if present
+        if (action.type) {
+            if (!VALID_ACTION_TYPES.includes(action.type)) {
+                errors.push({
+                    code: "INVALID_ACTION_TYPE",
+                    message: `Invalid action type '${action.type}'`,
+                    path: `${actionPath}.type`,
+                    suggestion: `Valid types are: ${VALID_ACTION_TYPES.join(", ")}`
+                });
+            }
+        }
 
         // Action name should be camelCase
         if (!CAMEL_CASE_REGEX.test(actionName)) {
@@ -309,9 +324,16 @@ function validateActions(spec: ModuleSpec, errors: ValidationError[], warnings: 
         }
     });
 
-    // Check for recommended actions
-    const hasCreate = actionNames.some(n => n.toLowerCase().includes("create") || n.toLowerCase().includes("add"));
-    const hasList = actionNames.some(n => n.toLowerCase().includes("list") || n.toLowerCase().includes("get"));
+    // Check for recommended actions (Explicit type OR regex fallback)
+    const hasCreate = actionNames.some(n => {
+        const action = spec.actions[n];
+        return action.type === 'create' || n.toLowerCase().includes("create") || n.toLowerCase().includes("add");
+    });
+
+    const hasList = actionNames.some(n => {
+        const action = spec.actions[n];
+        return action.type === 'list' || n.toLowerCase().includes("list") || n.toLowerCase().includes("get");
+    });
 
     if (!hasCreate) {
         warnings.push({

@@ -35,6 +35,7 @@
     },
     "actions": {
         "enrollStudent": {
+            "type": "create",
             "description": "Enroll a student in a course",
             "input": {
                 "studentId": {
@@ -52,6 +53,7 @@
             }
         },
         "listEnrollments": {
+            "type": "list",
             "description": "Get all enrollments",
             "input": {
                 "studentId": {
@@ -70,6 +72,7 @@
             }
         },
         "completeEnrollment": {
+            "type": "update",
             "description": "Mark enrollment as completed",
             "input": {
                 "id": {

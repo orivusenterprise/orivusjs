@@ -46,76 +46,81 @@ export function generateServiceFile(spec: ParsedModuleSpec): string {
 
   const methods = actions
     .map((action) => {
-      // --- Lógica Heurística v0.3 ---
+      // --- Lógica Determinista v0.4 (Explicit Types) ---
       let prismaOp = "findMany";
       let prismaArgs = "{}";
-      let returnWrapper = ""; // For wrapping the return statement
-      let returnSuffix = ""; // For adding after the prisma call
+      let returnWrapper = "";
+      let returnSuffix = "";
 
       const actionLower = action.name.toLowerCase();
 
-      if (action.output.kind === "model") {
-        if (action.output.isArray) {
-          // List actions
+      // Build common WHERE clause from input fields
+      const inputFields = action.input || [];
+      const whereField = inputFields.find(f => f.name === 'id')?.name
+        || inputFields[0]?.name
+        || 'id';
+      const whereClause = `{ where: { ${whereField}: input.${whereField} } }`;
+
+      // Determine 'type' (Explicit > Heuristic)
+      let type = action.type;
+
+      // Fallback: Heuristic Regex (Legacy)
+      if (!type) {
+        if (action.output.kind === "model") {
+          if (action.output.isArray) type = 'list';
+          else if (/^(create|add|submit|register|link|enroll|track)/i.test(actionLower)) type = 'create';
+          else if (/^(update|edit|modify|patch|complete)/i.test(actionLower)) type = 'update';
+          else type = 'get';
+        } else if (action.output.kind === "primitive") {
+          if (action.output.type === 'boolean' && /^(delete|remove|destroy)/i.test(actionLower)) type = 'delete';
+          else if (action.output.type === 'number') type = 'count';
+          else type = 'custom'; // boolean exists check?
+        }
+      }
+
+      // Map Type to Prisma Operation
+      switch (type) {
+        case 'create':
+          prismaOp = "create";
+          prismaArgs = "{ data: input }";
+          break;
+        case 'update':
+        case 'custom': // Default custom to update-like for safety? Or maybe just create?
+          prismaOp = "update";
+          prismaArgs = `{ where: { ${whereField}: input.${whereField} }, data: input }`;
+          break;
+        case 'delete':
+          prismaOp = "delete";
+          prismaArgs = whereClause;
+          returnWrapper = "await ";
+          returnSuffix = ".then(() => true).catch(() => false)";
+          break;
+        case 'list':
           prismaOp = "findMany";
-        } else {
-          // Single model actions
-          const isCreate = /^(create|add|submit|register|link|enroll|track)/i.test(actionLower);
-          const isUpdate = /^(update|edit|modify|patch|complete)/i.test(actionLower);
-          const isApprove = /^(approve|activate|enable|disable|toggle)/i.test(actionLower);
-
-          // Build where clause from input fields (use first field if not 'id')
-          const inputFields = action.input || [];
-          const whereField = inputFields.find(f => f.name === 'id')?.name
-            || inputFields[0]?.name
-            || 'id';
-          const whereClause = `{ where: { ${whereField}: input.${whereField} } }`;
-
-          if (isCreate) {
-            prismaOp = "create";
-            prismaArgs = "{ data: input }";
-          } else if (isUpdate || isApprove) {
-            // Update action - needs where and data
-            prismaOp = "update";
-            // For update, use id if available, else first field
-            prismaArgs = `{ where: { ${whereField}: input.${whereField} }, data: input }`;
-          } else {
-            // Get/Find action - use findFirstOrThrow to ensure non-null return
-            prismaOp = "findFirstOrThrow";
-            prismaArgs = whereClause;
-          }
-        }
-      } else if (action.output.kind === "primitive") {
-        const outputType = action.output.type;
-
-        // Build where clause from input fields
-        const inputFields = action.input || [];
-        const whereField = inputFields.find(f => f.name === 'id')?.name
-          || inputFields[0]?.name
-          || 'id';
-        const whereClause = `{ where: { ${whereField}: input.${whereField} } }`;
-
-        if (outputType === "boolean") {
-          // Delete actions typically return boolean
-          const isDelete = /^(delete|remove|destroy)/i.test(actionLower);
-
-          if (isDelete) {
-            prismaOp = "delete";
-            prismaArgs = whereClause;
-            // Wrap in try-catch to return boolean
-            returnWrapper = "await ";
-            returnSuffix = ".then(() => true).catch(() => false)";
-          } else {
-            // Other boolean actions (e.g., exists check)
-            prismaOp = "count";
-            prismaArgs = "{ where: input }";
-            returnSuffix = " > 0";
-          }
-        } else if (outputType === "number") {
-          // Count actions
+          // If input exists, use it as filter, otherwise empty
+          prismaArgs = inputFields.length > 0 ? "{ where: input }" : "{}";
+          break;
+        case 'get':
+          prismaOp = "findFirstOrThrow";
+          prismaArgs = whereClause;
+          break;
+        case 'count':
           prismaOp = "count";
+          prismaArgs = inputFields.length > 0 ? "{ where: input }" : "{}";
+          break;
+        default:
+          // Fallback default
+          prismaOp = "findMany";
           prismaArgs = "{}";
-        }
+      }
+
+      // Special case: Output kind check overrides? 
+      // No, we trust the type mapping. But for boolean deletes, returnSuffix adds the logic.
+      if (action.output.kind === "primitive" && action.output.type === "boolean" && type !== 'delete') {
+        // E.g. checkExists -> count > 0
+        prismaOp = "count";
+        prismaArgs = "{ where: input }";
+        returnSuffix = " > 0";
       }
 
       // --- Generación de Código ---

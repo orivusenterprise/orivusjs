@@ -1,4 +1,4 @@
-# 🪐 OrivusJS (v0.4.3-alpha)
+# 🪐 OrivusJS (v0.4.4-alpha)
 
 > **The AI-Native Framework for Building Modern Startups.**  
 > Describe your domain. Generate your backend. Build at the speed of thought.
@@ -108,11 +108,13 @@ Create a JSON or TS Spec (e.g., `specs/examples/blog-simple.json`):
   },
   "actions": {
     "create": {
+      "type": "create",
       "description": "Publish a new post",
       "input": { "title": { "type": "string" }, "content": { "type": "string" } },
       "output": { "kind": "model", "modelName": "Post" }
     },
     "list": {
+      "type": "list",
       "output": { "kind": "model", "modelName": "Post", "isArray": true }
     }
   }
@@ -165,39 +167,40 @@ This ensures:
 ---
 
 
-## 🔮 What's New in v0.4.3-alpha
+## 🔮 What's New in v0.4.4-alpha
 
-### 🎯 The Stability Release
+### 🎯 Theme: "Deterministic Developer Experience"
 
-> *"A framework that fails on a simple blog cannot promise AI-Native capabilities."*
+> *"Explicit is better than implicit."*
+
+**🛠️ Deterministic Generation**
+- **Explicit Action Types**: Eliminating "magic" guesswork. Define `type: "create" | "update" | "list" | ...` in your spec and get guaranteed results.
+- **Robustness**: 100% predictable service and router generation.
+
+**📦 SaaS LMS (Complex Example)**
+- Successfully generates a **6-module Learning Management System** with complex relations.
+- **Modules**: `Instructor`, `Course`, `Lesson`, `Student`, `Enrollment`, `Progress`.
+- **Zero manual fixes required.**
+
+---
+
+### Previous: v0.4.3 (The Stability Release)
 
 **🧪 Template Tests (119 tests)**
 - 96 tests for all generation templates
 - 23 tests for spec validation
-- Complete coverage of edge cases
 
 **✅ Spec Validator**
 - Validates specs BEFORE generation
 - Clear error messages with suggestions
-- Catches common mistakes early
 
 **🚀 E2E Test Command**
-```bash
-npm run orivus:e2e-test specs/products/blog
-```
-Tests the entire generation pipeline in one command!
-
-**📦 Blog Platform Example**
-- Canonical 4-module product (User, Post, Comment, Tag)
-- Demonstrates relations and full pipeline
-- Located in `specs/products/blog/`
+- Validates pipeline integrity on Blog & LMS products.
 
 **E2E Test Result:**
 ```
-✅ PASSED: Blog Platform
-   Modules: 4
-   Tests: 12/12
-   Duration: 25s
+✅ PASSED: SaaS LMS (6 modules)
+   Tests: 14/14
 ```
 
 ---

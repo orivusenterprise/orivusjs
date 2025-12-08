@@ -9,17 +9,24 @@ export function generateRouterFile(spec: ParsedModuleSpec): string {
             // We reuse the logic from schema.template (conceptually) or implement a mini-mapper here
             // to ensure special types like Date are coerced properly.
 
-            // Determine if this is a query (will need to accept {} from UI)
-            const lowerName = action.name.toLowerCase();
-            const isMutationAction = lowerName.startsWith("create") ||
-                lowerName.startsWith("add") ||
-                lowerName.startsWith("update") ||
-                lowerName.startsWith("delete") ||
-                lowerName.startsWith("save") ||
-                lowerName.startsWith("apply") ||
-                lowerName.startsWith("enroll") ||
-                lowerName.startsWith("track") ||
-                lowerName.startsWith("complete");
+            // Determine isMutation (Explicit > Heuristic)
+            let isMutationAction = false;
+
+            if (action.type) {
+                isMutationAction = ['create', 'update', 'delete', 'custom'].includes(action.type);
+            } else {
+                // Legacy Heuristic
+                const lowerName = action.name.toLowerCase();
+                isMutationAction = lowerName.startsWith("create") ||
+                    lowerName.startsWith("add") ||
+                    lowerName.startsWith("update") ||
+                    lowerName.startsWith("delete") ||
+                    lowerName.startsWith("save") ||
+                    lowerName.startsWith("apply") ||
+                    lowerName.startsWith("enroll") ||
+                    lowerName.startsWith("track") ||
+                    lowerName.startsWith("complete");
+            }
 
             let inputSchema: string;
             if (action.input && action.input.length > 0) {
@@ -58,8 +65,7 @@ export function generateRouterFile(spec: ParsedModuleSpec): string {
                         ? `.output(${model.name}Schema${action.output.isArray ? ".array()" : ""})`
                         : "";
 
-            // 2. Heuristic for Query vs Mutation
-            // If name suggests modification, use mutation. Default to query.
+            // 2. Query vs Mutation
             const procedureType = isMutationAction ? "mutation" : "query";
 
             return `  ${action.name}: publicProcedure${inputSchema}${output}.${procedureType}(async ({ input }) => {

@@ -28,6 +28,7 @@
     },
     "actions": {
         "createStudent": {
+            "type": "create",
             "description": "Register a new student",
             "input": {
                 "name": {
@@ -49,6 +50,7 @@
             }
         },
         "listStudents": {
+            "type": "list",
             "description": "Get all students",
             "output": {
                 "kind": "model",
@@ -57,6 +59,7 @@
             }
         },
         "getStudent": {
+            "type": "get",
             "description": "Get student by ID",
             "input": {
                 "id": {

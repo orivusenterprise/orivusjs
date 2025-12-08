@@ -283,4 +283,61 @@ describe("service.template", () => {
             expect(result).toContain("async listUsers");
         });
     });
+
+    describe("Deterministic Type Logic (v0.4.4)", () => {
+        it("uses explicit type 'create' regardless of action name", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "weirdActionName",
+                    type: "create",
+                    input: [{ name: "name", type: "string", required: true, description: "", isArray: false }],
+                    output: { kind: "model", modelName: "User" }
+                }]
+            });
+
+            const result = generateServiceFile(spec);
+            expect(result).toContain("prisma.user.create");
+        });
+
+        it("uses explicit type 'update' regardless of action name", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "somethingElse",
+                    type: "update",
+                    input: [{ name: "id", type: "string", required: true, description: "", isArray: false }],
+                    output: { kind: "model", modelName: "User" }
+                }]
+            });
+
+            const result = generateServiceFile(spec);
+            expect(result).toContain("prisma.user.update");
+        });
+
+        it("uses explicit type 'delete' regardless of name", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "removeThing",
+                    type: "delete",
+                    input: [{ name: "id", type: "string", required: true, description: "", isArray: false }],
+                    output: { kind: "primitive", type: "boolean" }
+                }]
+            });
+
+            const result = generateServiceFile(spec);
+            expect(result).toContain("prisma.user.delete");
+        });
+
+        it("uses explicit type 'list' regardless of output array status", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "customQuery",
+                    type: "list",
+                    output: { kind: "model", modelName: "User", isArray: false }
+                }]
+            });
+
+            const result = generateServiceFile(spec);
+            expect(result).toContain("prisma.user.findMany");
+        });
+    });
 });

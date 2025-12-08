@@ -27,7 +27,10 @@ export interface ModelReferenceOutput {
 
 export type ActionOutput = PrimitiveOutput | ModelReferenceOutput;
 
+export type ActionType = 'create' | 'update' | 'delete' | 'list' | 'get' | 'count' | 'custom';
+
 export type ActionDefinition = {
+    type?: ActionType; // Explicit type hint to avoid heuristic guessing
     input?: ModelSchema;
     output?: ActionOutput;
     description?: string;

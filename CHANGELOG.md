@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.4.4-alpha] - 2025-12-08
+
+### 🎯 Theme: "Deterministic Developer Experience"
+
+> *"Explicit is better than implicit." - The Zen of Python (and OrivusJS)*
+
+This release eliminates "magic" heuristics in favor of deterministic code generation using explicit action types in the spec.
+
+### Added
+- **Explicit Action Types**: `type` field in `action` definition (`create`, `update`, `delete`, `list`, `get`, `count`, `custom`).
+- **Deterministic Templates**: Service and Router generation now prioritize explicit types over regex guessing.
+- **Spec Documentation**: Updated `specs/README.md` with new format.
+
+### Fixed
+- **Regex Fragility**: Fixed issues where actions like `enrollStudent` or `trackProgress` were misclassified.
+- **Input Handling**: Fixed `useQuery` empty input issues (`{}`).
+- **Validation**: Validator now checks and recommends explicit action types.
+
+### Verification
+- **SaaS LMS (6 Modules)**: Generated successfully with 0 errors.
+   - Verified scalability on complex relational project.
+   - `Instructor`, `Course`, `Lesson`, `Student`, `Enrollment`, `Progress`.
+
+---
+
 ## [0.4.3-alpha] - 2025-12-08
 
 ### 🎯 Theme: "The Stability Release"
@@ -16,86 +41,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This release focuses on testing, validation, and reliability. The Blog Platform now generates successfully with a single command.
 
 ### Added
-
-- **Template Test Suite** (96 tests)
-  - `prisma-model.template`: 9 tests (relations, field types)
-  - `schema.template`: 12 tests (type mapping, nullish, FKs)
-  - `router.template`: 19 tests (procedure types, input/output schemas)
-  - `service.template`: 17 tests (Prisma operations, input signatures)
-  - `ui-form.template`: 14 tests (FK detection, state, field rendering)
-  - `ui-list.template`: 13 tests (query input, title detection)
-  - `test.template`: 12 tests (action detection, mock data, FK errors)
-
-- **Spec Validator** (23 tests)
-  - Validates specs BEFORE generation
-  - Clear error messages with suggestions
-  - Warnings for non-critical issues
-  - Integration with CLI
-
-- **E2E Test Command**
-  - `npm run orivus:e2e-test <product-path>`
-  - Validates all specs
-  - Generates all modules in order
-  - Runs TypeScript check
-  - Runs all tests
-  - Reports results with timing
-
-- **Blog Platform Spec** (`specs/products/blog/`)
-  - Canonical example with 4 modules
-  - User, Post, Comment, Tag with relations
-  - Product manifest for execution order
-
-- **Documentation**
-  - `LLM_PERSPECTIVE.md`: AI feedback on framework design
-  - `docs/v0.4.3-STABILITY-PLAN.md`: Implementation plan
+- **Template Test Suite** (96 tests) covering all templates.
+- **Spec Validator** integrated into CLI.
+- **E2E Test Command** (`orivus:e2e-test`).
+- **Blog Platform Spec** (Canonical Example).
 
 ### Fixed
+- **Prisma Relations**: Fixed injection of inverse relations.
+- **Schema Nullability**: Using `nullish()` for proper Prisma compatibility.
+- **Service Generation**: Correct handling of `findFirstOrThrow` and `delete`.
 
-- **prisma-model.template**
-  - Skip `hasMany` relations during initial generation
-  - Inject inverse relations when child model created
-  - Skip `manyToMany` (not yet fully supported)
-
-- **updatePrisma.ts**
-  - Auto-inject inverse `hasMany` relations
-
-- **schema.template**
-  - Use `nullish()` instead of `optional()` for Prisma compatibility
-  - Prisma returns `null`, not `undefined`
-
-- **service.template** (major rewrite)
-  - `findFirst` → `findFirstOrThrow` (ensures non-null return)
-  - `delete` actions now properly use `prisma.delete` with boolean result
-  - `update` actions use `prisma.update` with where clause
-  - Smart `where` clause from actual input fields (not just `id`)
-
-- **ui-form.template**
-  - Detect `*Id` fields as FK and generate RelationSelect
-
-- **ui-list.template**
-  - Pass `{}` for actions with optional input
-
-- **test.template**
-  - Pass `{}` for list actions with optional input
-
-### Changed
-
-- **ROADMAP.md**: Added "Phase 0: Stability" before Kernel/Context
-- **CLI**: Now validates specs before generation with clear error messages
-
-### E2E Test Result
-
-```
-✅ PASSED: Blog Platform (4 modules)
-✅ PASSED: SaaS LMS (6 modules)
-   Tests: 14/14
-   Duration: 231s
-```
-
-### Fixed (Hotfixes post-Blog)
-- Improved regex for `create`/`update`/`delete` detection (support for grouping)
-- Added support for `enroll`, `track`, `complete` keywords in action detection
-- Fixed empty input handling in tRPC routers and UI templates (`useQuery({})`)
+### Verification
+- **Blog Platform (4 Modules)**: PASSED.
 
 ---
 

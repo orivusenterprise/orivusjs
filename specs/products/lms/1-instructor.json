@@ -38,6 +38,7 @@
     },
     "actions": {
         "createInstructor": {
+            "type": "create",
             "description": "Register a new instructor",
             "input": {
                 "name": {
@@ -51,14 +52,6 @@
                 "bio": {
                     "type": "string",
                     "required": false
-                },
-                "avatar": {
-                    "type": "string",
-                    "required": false
-                },
-                "expertise": {
-                    "type": "string",
-                    "required": false
                 }
             },
             "output": {
@@ -67,7 +60,8 @@
             }
         },
         "listInstructors": {
-            "description": "Get all instructors",
+            "type": "list",
+            "description": "List all instructors",
             "output": {
                 "kind": "model",
                 "modelName": "Instructor",
@@ -75,7 +69,8 @@
             }
         },
         "getInstructor": {
-            "description": "Get instructor by ID",
+            "type": "get",
+            "description": "Get instructor details",
             "input": {
                 "id": {
                     "type": "string",

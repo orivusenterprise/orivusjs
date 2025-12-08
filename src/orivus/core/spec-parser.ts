@@ -4,6 +4,7 @@ import {
     ModelSchema,
     ActionDefinition,
     ActionOutput,
+    ActionType
 } from "./module-spec";
 
 export type ParsedField = {
@@ -23,6 +24,7 @@ export type ParsedModel = {
 
 export type ParsedAction = {
     name: string;
+    type?: ActionType;
     input?: ParsedField[];
     output: ActionOutput | { kind: "void" };
     description?: string;
@@ -104,6 +106,7 @@ function validateAction(
 
     return {
         name,
+        type: action.type,
         input,
         output: parsedOutput,
         description: action.description ?? "",
