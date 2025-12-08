@@ -70,7 +70,7 @@ describe("service.template", () => {
             expect(result).toContain("prisma.user.findMany");
         });
 
-        it("uses findFirst for get* actions returning single model", () => {
+        it("uses findFirstOrThrow for get* actions returning single model", () => {
             const spec = createSpec({
                 actions: [{
                     name: "getUser",
@@ -81,10 +81,11 @@ describe("service.template", () => {
 
             const result = generateServiceFile(spec);
 
-            expect(result).toContain("prisma.user.findFirst");
+            expect(result).toContain("prisma.user.findFirstOrThrow");
+            expect(result).toContain("where: { id: input.id }");
         });
 
-        it("uses count for actions returning primitive", () => {
+        it("uses count for actions returning number", () => {
             const spec = createSpec({
                 actions: [{
                     name: "countUsers",
@@ -95,6 +96,41 @@ describe("service.template", () => {
             const result = generateServiceFile(spec);
 
             expect(result).toContain("prisma.user.count");
+        });
+
+        it("uses delete for delete* actions returning boolean", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "deleteUser",
+                    input: [{ name: "id", type: "string", required: true, description: "", isArray: false }],
+                    output: { kind: "primitive", type: "boolean" }
+                }]
+            });
+
+            const result = generateServiceFile(spec);
+
+            expect(result).toContain("prisma.user.delete");
+            expect(result).toContain("where: { id: input.id }");
+            expect(result).toContain(".then(() => true).catch(() => false)");
+        });
+
+        it("uses update for update* actions", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "updateUser",
+                    input: [
+                        { name: "id", type: "string", required: true, description: "", isArray: false },
+                        { name: "name", type: "string", required: true, description: "", isArray: false }
+                    ],
+                    output: { kind: "model", modelName: "User" }
+                }]
+            });
+
+            const result = generateServiceFile(spec);
+
+            expect(result).toContain("prisma.user.update");
+            expect(result).toContain("where: { id: input.id }");
+            expect(result).toContain("data: input");
         });
     });
 

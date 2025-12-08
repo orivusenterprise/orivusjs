@@ -46,39 +46,89 @@ export function generateServiceFile(spec: ParsedModuleSpec): string {
 
   const methods = actions
     .map((action) => {
-      // --- Lógica Heurística v0.2 ---
+      // --- Lógica Heurística v0.3 ---
       let prismaOp = "findMany";
       let prismaArgs = "{}";
+      let returnWrapper = ""; // For wrapping the return statement
+      let returnSuffix = ""; // For adding after the prisma call
+
+      const actionLower = action.name.toLowerCase();
 
       if (action.output.kind === "model") {
         if (action.output.isArray) {
+          // List actions
           prismaOp = "findMany";
         } else {
-          // Detectamos intención de crear
-          const isCreate = /^create|add|submit|register|link/i.test(action.name);
+          // Single model actions
+          const isCreate = /^create|add|submit|register|link/i.test(actionLower);
+          const isUpdate = /^update|edit|modify|patch/i.test(actionLower);
+          const isApprove = /^approve|activate|enable|disable|toggle/i.test(actionLower);
+
+          // Build where clause from input fields (use first field if not 'id')
+          const inputFields = action.input || [];
+          const whereField = inputFields.find(f => f.name === 'id')?.name
+            || inputFields[0]?.name
+            || 'id';
+          const whereClause = `{ where: { ${whereField}: input.${whereField} } }`;
 
           if (isCreate) {
             prismaOp = "create";
             prismaArgs = "{ data: input }";
+          } else if (isUpdate || isApprove) {
+            // Update action - needs where and data
+            prismaOp = "update";
+            // For update, use id if available, else first field
+            prismaArgs = `{ where: { ${whereField}: input.${whereField} }, data: input }`;
           } else {
-            prismaOp = "findFirst";
+            // Get/Find action - use findFirstOrThrow to ensure non-null return
+            prismaOp = "findFirstOrThrow";
+            prismaArgs = whereClause;
           }
         }
       } else if (action.output.kind === "primitive") {
-        // Si retorna numero, asumimos count o aggregate
-        prismaOp = "count";
+        const outputType = action.output.type;
+
+        // Build where clause from input fields
+        const inputFields = action.input || [];
+        const whereField = inputFields.find(f => f.name === 'id')?.name
+          || inputFields[0]?.name
+          || 'id';
+        const whereClause = `{ where: { ${whereField}: input.${whereField} } }`;
+
+        if (outputType === "boolean") {
+          // Delete actions typically return boolean
+          const isDelete = /^delete|remove|destroy/i.test(actionLower);
+
+          if (isDelete) {
+            prismaOp = "delete";
+            prismaArgs = whereClause;
+            // Wrap in try-catch to return boolean
+            returnWrapper = "await ";
+            returnSuffix = ".then(() => true).catch(() => false)";
+          } else {
+            // Other boolean actions (e.g., exists check)
+            prismaOp = "count";
+            prismaArgs = "{ where: input }";
+            returnSuffix = " > 0";
+          }
+        } else if (outputType === "number") {
+          // Count actions
+          prismaOp = "count";
+          prismaArgs = "{}";
+        }
       }
 
       // --- Generación de Código ---
-      // Usamos el generador de tipos estricto para el input
       const signature = generateInputSignature(action.input);
-      // Si no hay input, ponemos parámetro opcional o vacío
       const args = signature ? signature : "input?: any";
+
+      // Build the return statement
+      let returnStatement = `return ${returnWrapper}prisma.${prismaClient}.${prismaOp}(${prismaArgs})${returnSuffix};`;
 
       return `
   async ${action.name}(${args}) {
     // Logic inferred: ${prismaOp} on ${model.name}
-    return prisma.${prismaClient}.${prismaOp}(${prismaArgs});
+    ${returnStatement}
   }`;
     })
     .join(",\n"); // Correcto para Objetos
