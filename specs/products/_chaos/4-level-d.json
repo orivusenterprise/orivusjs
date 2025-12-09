@@ -1,0 +1,50 @@
+{
+    "name": "levelD",
+    "description": "Level D -> belongs to C (depth 4)",
+    "models": {
+        "LevelD": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "levelC": {
+                "type": "relation",
+                "target": "LevelC",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "createLevelD": {
+            "type": "create",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "levelCId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "LevelD"
+            }
+        },
+        "listLevelDs": {
+            "type": "list",
+            "input": {
+                "levelCId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "LevelD",
+                "isArray": true
+            }
+        }
+    }
+}

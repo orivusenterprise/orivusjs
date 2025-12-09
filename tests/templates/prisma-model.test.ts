@@ -116,7 +116,8 @@ describe("prisma-model.template", () => {
 
             const result = generatePrismaModel(model);
 
-            expect(result).toContain("author User @relation(fields: [authorId], references: [id])");
+            // Should include named relation to prevent Prisma ambiguity
+            expect(result).toContain('author User @relation("Post_author"');
             expect(result).toContain("authorId String");
         });
 

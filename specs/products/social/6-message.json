@@ -1,0 +1,100 @@
+{
+    "name": "message",
+    "description": "Direct messages between profiles",
+    "models": {
+        "Message": {
+            "content": {
+                "type": "string",
+                "required": true
+            },
+            "isRead": {
+                "type": "boolean",
+                "required": true,
+                "default": false
+            },
+            "sender": {
+                "type": "relation",
+                "target": "Profile",
+                "relationType": "belongsTo",
+                "description": "Who sent the message"
+            },
+            "receiver": {
+                "type": "relation",
+                "target": "Profile",
+                "relationType": "belongsTo",
+                "description": "Who receives the message"
+            }
+        }
+    },
+    "actions": {
+        "sendMessage": {
+            "type": "create",
+            "input": {
+                "content": {
+                    "type": "string",
+                    "required": true
+                },
+                "senderId": {
+                    "type": "string",
+                    "required": true
+                },
+                "receiverId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Message"
+            }
+        },
+        "listMessages": {
+            "type": "list",
+            "input": {
+                "senderId": {
+                    "type": "string",
+                    "required": false
+                },
+                "receiverId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Message",
+                "isArray": true
+            }
+        },
+        "markAsRead": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "isRead": {
+                    "type": "boolean",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Message"
+            }
+        },
+        "deleteMessage": {
+            "type": "delete",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

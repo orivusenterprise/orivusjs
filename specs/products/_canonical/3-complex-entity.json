@@ -1,0 +1,117 @@
+{
+    "name": "category",
+    "description": "Tests pluralization edge case (category -> categories, not categorys)",
+    "models": {
+        "Category": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "slug": {
+                "type": "string",
+                "required": true
+            },
+            "description": {
+                "type": "string",
+                "required": false
+            },
+            "displayOrder": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "isVisible": {
+                "type": "boolean",
+                "required": true,
+                "default": true
+            },
+            "parent": {
+                "type": "relation",
+                "target": "BaseEntity",
+                "relationType": "belongsTo",
+                "required": false,
+                "description": "Optional parent for hierarchy"
+            }
+        }
+    },
+    "actions": {
+        "createCategory": {
+            "type": "create",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "slug": {
+                    "type": "string",
+                    "required": true
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                },
+                "parentId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Category"
+            }
+        },
+        "listCategories": {
+            "type": "list",
+            "description": "Correct pluralization: Categories (not Categorys)",
+            "input": {
+                "isVisible": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Category",
+                "isArray": true
+            }
+        },
+        "getCategory": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Category"
+            }
+        },
+        "updateCategory": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "name": {
+                    "type": "string",
+                    "required": false
+                },
+                "isVisible": {
+                    "type": "boolean",
+                    "required": false
+                },
+                "displayOrder": {
+                    "type": "number",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Category"
+            }
+        }
+    }
+}

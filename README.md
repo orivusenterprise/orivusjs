@@ -1,4 +1,4 @@
-# 🪐 OrivusJS (v0.4.4-alpha)
+# 🪐 OrivusJS (v0.4.5-alpha)
 
 > **The AI-Native Framework for Building Modern Startups.**  
 > Describe your domain. Generate your backend. Build at the speed of thought.

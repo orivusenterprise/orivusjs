@@ -132,7 +132,7 @@ describe("schema.template", () => {
 
             const result = generateSchemaFile(spec);
 
-            expect(result).toContain("reviewerId: z.string().optional()");
+            expect(result).toContain("reviewerId: z.string().nullish()");
         });
 
         it("skips hasMany relations in schema", () => {

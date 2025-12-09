@@ -1,4 +1,5 @@
 import { ParsedModuleSpec, ParsedField } from "../../core/spec-parser";
+import { findCreateAction, findListAction } from "../../core/action-resolver";
 
 /**
  * Helper to generate mock data for tests based on field types
@@ -26,9 +27,8 @@ function generateMockData(models: ParsedModuleSpec["models"], actionInput?: Pars
                 value = "true";
                 break;
             case "date":
-                // Send as ISO String to simulate real API JSON payload.
-                // Zod z.coerce.date() will handle this.
-                value = `new Date().toISOString()`;
+                // tRPC caller expects native Date objects, not strings
+                value = `new Date()`;
                 break;
             case "json":
                 value = "{}";
@@ -46,19 +46,9 @@ export function generateTestFile(spec: ParsedModuleSpec): string {
     const moduleName = spec.moduleName;
     const pascalName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
 
-    // Intelligent Action Detection
-    const createAction = spec.actions.find(a =>
-        (a.name.toLowerCase().includes("create") || a.name.toLowerCase().includes("add") || a.name.toLowerCase().includes("link") || a.name.toLowerCase().includes("apply") || (a.input && !(a.output as any)?.isArray))
-    ) || spec.actions[0]; // Fallback to first action
-
-    let listAction = spec.actions.find(a =>
-        (a.name.toLowerCase().includes("list") || a.name.toLowerCase().includes("get") || a.name.toLowerCase().includes("dashboard") || (a.output as any)?.isArray)
-    );
-
-    // If no explicit list action found, try to find another action that is NOT the create action
-    if (!listAction && spec.actions.length > 1) {
-        listAction = spec.actions.find(a => a.name !== createAction.name);
-    }
+    // Use centralized action resolver - single source of truth
+    const createAction = findCreateAction(spec.actions) || spec.actions[0];
+    const listAction = findListAction(spec.actions);
 
     const createMethodName = createAction ? createAction.name : "create";
     const listMethodName = listAction ? listAction.name : null;

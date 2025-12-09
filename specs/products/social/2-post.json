@@ -1,0 +1,123 @@
+{
+    "name": "post",
+    "description": "Social media posts with engagement metrics",
+    "models": {
+        "Post": {
+            "content": {
+                "type": "string",
+                "required": true
+            },
+            "mediaUrl": {
+                "type": "string",
+                "required": false
+            },
+            "mediaType": {
+                "type": "string",
+                "required": false,
+                "description": "image, video, gif"
+            },
+            "isPublic": {
+                "type": "boolean",
+                "required": true,
+                "default": true
+            },
+            "likeCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "commentCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "shareCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "author": {
+                "type": "relation",
+                "target": "Profile",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "publishPost": {
+            "type": "create",
+            "description": "Create a new post",
+            "input": {
+                "content": {
+                    "type": "string",
+                    "required": true
+                },
+                "mediaUrl": {
+                    "type": "string",
+                    "required": false
+                },
+                "mediaType": {
+                    "type": "string",
+                    "required": false
+                },
+                "authorId": {
+                    "type": "string",
+                    "required": true
+                },
+                "isPublic": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Post"
+            }
+        },
+        "listPosts": {
+            "type": "list",
+            "description": "Get feed posts",
+            "input": {
+                "authorId": {
+                    "type": "string",
+                    "required": false
+                },
+                "isPublic": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Post",
+                "isArray": true
+            }
+        },
+        "getPost": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Post"
+            }
+        },
+        "deletePost": {
+            "type": "delete",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

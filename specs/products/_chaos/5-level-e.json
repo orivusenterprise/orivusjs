@@ -1,0 +1,58 @@
+{
+    "name": "levelE",
+    "description": "Level E -> belongs to D (depth 5 - DEEPEST)",
+    "models": {
+        "LevelE": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "value": {
+                "type": "number",
+                "required": true
+            },
+            "levelD": {
+                "type": "relation",
+                "target": "LevelD",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "createLevelE": {
+            "type": "create",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "value": {
+                    "type": "number",
+                    "required": true
+                },
+                "levelDId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "LevelE"
+            }
+        },
+        "listLevelEs": {
+            "type": "list",
+            "input": {
+                "levelDId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "LevelE",
+                "isArray": true
+            }
+        }
+    }
+}

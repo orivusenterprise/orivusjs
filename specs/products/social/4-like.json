@@ -1,0 +1,68 @@
+{
+    "name": "like",
+    "description": "Likes on posts - tracks who liked what",
+    "models": {
+        "Like": {
+            "profile": {
+                "type": "relation",
+                "target": "Profile",
+                "relationType": "belongsTo"
+            },
+            "post": {
+                "type": "relation",
+                "target": "Post",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "likePost": {
+            "type": "create",
+            "input": {
+                "profileId": {
+                    "type": "string",
+                    "required": true
+                },
+                "postId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Like"
+            }
+        },
+        "listLikes": {
+            "type": "list",
+            "input": {
+                "postId": {
+                    "type": "string",
+                    "required": false
+                },
+                "profileId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Like",
+                "isArray": true
+            }
+        },
+        "unlikePost": {
+            "type": "delete",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

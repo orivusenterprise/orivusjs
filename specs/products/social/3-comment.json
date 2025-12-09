@@ -1,0 +1,77 @@
+{
+    "name": "comment",
+    "description": "Comments on posts with threading support",
+    "models": {
+        "Comment": {
+            "content": {
+                "type": "string",
+                "required": true
+            },
+            "likeCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "author": {
+                "type": "relation",
+                "target": "Profile",
+                "relationType": "belongsTo"
+            },
+            "post": {
+                "type": "relation",
+                "target": "Post",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "addComment": {
+            "type": "create",
+            "input": {
+                "content": {
+                    "type": "string",
+                    "required": true
+                },
+                "authorId": {
+                    "type": "string",
+                    "required": true
+                },
+                "postId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Comment"
+            }
+        },
+        "listComments": {
+            "type": "list",
+            "input": {
+                "postId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Comment",
+                "isArray": true
+            }
+        },
+        "deleteComment": {
+            "type": "delete",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

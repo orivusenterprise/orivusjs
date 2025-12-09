@@ -162,7 +162,7 @@ describe("test.template", () => {
             expect(result).toContain("published: true");
         });
 
-        it("generates date mock data as ISO string", () => {
+        it("generates date mock data as native Date object", () => {
             const spec = createSpec({
                 moduleName: "event",
                 models: [{ name: "Event", fields: [] }],
@@ -175,7 +175,9 @@ describe("test.template", () => {
 
             const result = generateTestFile(spec);
 
-            expect(result).toContain("startDate: new Date().toISOString()");
+            // tRPC caller expects native Date objects, not strings
+            expect(result).toContain("startDate: new Date()");
+            expect(result).not.toContain("toISOString");
         });
     });
 

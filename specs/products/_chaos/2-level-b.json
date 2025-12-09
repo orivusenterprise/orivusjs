@@ -1,0 +1,50 @@
+{
+    "name": "levelB",
+    "description": "Level B -> belongs to A",
+    "models": {
+        "LevelB": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "levelA": {
+                "type": "relation",
+                "target": "LevelA",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "createLevelB": {
+            "type": "create",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "levelAId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "LevelB"
+            }
+        },
+        "listLevelBs": {
+            "type": "list",
+            "input": {
+                "levelAId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "LevelB",
+                "isArray": true
+            }
+        }
+    }
+}

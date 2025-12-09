@@ -1,4 +1,5 @@
 import { ParsedModuleSpec, ParsedField } from "../../core/spec-parser";
+import { findCreateAction } from "../../core/action-resolver";
 
 /**
  * Generates a Create Form component for a module using Orivus UI Kit
@@ -8,11 +9,8 @@ export function generateFormComponent(spec: ParsedModuleSpec): string {
     const modelName = model.name;
     const moduleName = spec.moduleName;
 
-    const createAction = spec.actions.find(a =>
-        a.name.toLowerCase().includes('create') ||
-        a.name.toLowerCase().includes('add') ||
-        a.name.toLowerCase().includes('new')
-    );
+    // Use centralized action resolver - single source of truth
+    const createAction = findCreateAction(spec.actions);
 
     if (!createAction) {
         return `// No create action found for ${modelName}`;
@@ -29,7 +27,7 @@ export function generateFormComponent(spec: ParsedModuleSpec): string {
         if (field.type === 'relation' && field.target) {
             relationFields.push({
                 field,
-                targetModule: field.target.toLowerCase(),
+                targetModule: toCamelCase(field.target),
                 targetModel: field.target
             });
         }
@@ -44,7 +42,7 @@ export function generateFormComponent(spec: ParsedModuleSpec): string {
             if (modelRelation && modelRelation.target) {
                 relationFields.push({
                     field,
-                    targetModule: modelRelation.target.toLowerCase(),
+                    targetModule: toCamelCase(modelRelation.target),
                     targetModel: modelRelation.target
                 });
             }
@@ -54,7 +52,8 @@ export function generateFormComponent(spec: ParsedModuleSpec): string {
     // 2. Generate Relation Queries
     // Always pass {} because the target list action may have optional filters
     const relationQueries = relationFields.map(({ field, targetModule }) => {
-        return `    const { data: ${field.name}Options, isLoading: is${capitalize(field.name)}Loading } = trpc.${targetModule}.list${capitalize(targetModule)}s.useQuery({});`;
+        const pluralName = pluralize(capitalize(targetModule));
+        return `    const { data: ${field.name}Options, isLoading: is${capitalize(field.name)}Loading } = trpc.${targetModule}.list${pluralName}.useQuery({});`;
     }).join('\n');
 
     // 3. Create a set of relation field names for quick lookup
@@ -69,7 +68,12 @@ export function generateFormComponent(spec: ParsedModuleSpec): string {
         .join('\n');
 
     const inputObject = inputFields
-        .map(field => `${field.name}`)
+        .map(field => {
+            if (field.type === 'date' && field.required) {
+                return `${field.name}: ${field.name}!`;
+            }
+            return `${field.name}`;
+        })
         .join(', ');
 
     const formFields = inputFields
@@ -203,6 +207,18 @@ function generateFormField(field: ParsedField): string {
             </div>`;
     }
 
+    if (field.type === "date") {
+        return `            <div className="space-y-2">
+                <Label>${label}</Label>
+                <Input
+                    type="date"
+                    value={${field.name} instanceof Date ? ${field.name}.toISOString().split('T')[0] : ''}
+                    onChange={(e) => ${setterName}(e.target.value ? new Date(e.target.value) : undefined)}
+                    required={${field.required}}
+                />
+            </div>`;
+    }
+
     return `            <div className="space-y-2">
                 <Label>${label}</Label>
                 <Input
@@ -218,6 +234,7 @@ function getStateType(field: ParsedField): string {
     switch (field.type) {
         case "number": return "<number>";
         case "boolean": return "<boolean>";
+        case "date": return "<Date | undefined>";
         default: return "<string>";
     }
 }
@@ -226,10 +243,27 @@ function getDefaultValue(field: ParsedField): string {
     switch (field.type) {
         case "number": return "0";
         case "boolean": return "false";
+        case "date": return "undefined";
         default: return '""';
     }
 }
 
 function capitalize(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function pluralize(word: string): string {
+    // Handle common English pluralization rules
+    if (word.endsWith('y') && !['a', 'e', 'i', 'o', 'u'].includes(word.charAt(word.length - 2).toLowerCase())) {
+        return word.slice(0, -1) + 'ies'; // category -> categories
+    }
+    if (word.endsWith('s') || word.endsWith('x') || word.endsWith('ch') || word.endsWith('sh')) {
+        return word + 'es'; // box -> boxes
+    }
+    return word + 's'; // default: product -> products
+}
+
+function toCamelCase(str: string): string {
+    // Convert PascalCase to camelCase: BaseEntity -> baseEntity
+    return str.charAt(0).toLowerCase() + str.slice(1);
 }

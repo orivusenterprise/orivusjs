@@ -1,0 +1,127 @@
+{
+    "name": "profile",
+    "description": "User profiles with social information",
+    "models": {
+        "Profile": {
+            "username": {
+                "type": "string",
+                "required": true
+            },
+            "displayName": {
+                "type": "string",
+                "required": true
+            },
+            "bio": {
+                "type": "string",
+                "required": false
+            },
+            "avatarUrl": {
+                "type": "string",
+                "required": false
+            },
+            "isVerified": {
+                "type": "boolean",
+                "required": true,
+                "default": false
+            },
+            "isPrivate": {
+                "type": "boolean",
+                "required": true,
+                "default": false
+            },
+            "followerCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "followingCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            }
+        }
+    },
+    "actions": {
+        "createProfile": {
+            "type": "create",
+            "input": {
+                "username": {
+                    "type": "string",
+                    "required": true
+                },
+                "displayName": {
+                    "type": "string",
+                    "required": true
+                },
+                "bio": {
+                    "type": "string",
+                    "required": false
+                },
+                "avatarUrl": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Profile"
+            }
+        },
+        "listProfiles": {
+            "type": "list",
+            "input": {
+                "isVerified": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Profile",
+                "isArray": true
+            }
+        },
+        "getProfile": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Profile"
+            }
+        },
+        "updateProfile": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "displayName": {
+                    "type": "string",
+                    "required": false
+                },
+                "bio": {
+                    "type": "string",
+                    "required": false
+                },
+                "avatarUrl": {
+                    "type": "string",
+                    "required": false
+                },
+                "isPrivate": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Profile"
+            }
+        }
+    }
+}

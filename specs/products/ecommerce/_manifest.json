@@ -1,0 +1,19 @@
+{
+    "$schema": "orivus-product-manifest",
+    "name": "Orivus Commerce",
+    "version": "1.0.0",
+    "description": "Full E-commerce platform with products, orders, and customers",
+    "executionOrder": [
+        "1-category.json",
+        "2-product.json",
+        "3-customer.json",
+        "4-order.json",
+        "5-order-item.json"
+    ],
+    "features": {
+        "catalog": "Categories and Products with inventory",
+        "customers": "Customer management with addresses",
+        "orders": "Order processing with line items",
+        "pricing": "Price calculations and discounts"
+    }
+}

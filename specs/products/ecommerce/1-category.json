@@ -1,0 +1,87 @@
+{
+    "name": "category",
+    "description": "Product categories for catalog organization",
+    "models": {
+        "Category": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "slug": {
+                "type": "string",
+                "required": true
+            },
+            "description": {
+                "type": "string",
+                "required": false
+            },
+            "isActive": {
+                "type": "boolean",
+                "required": true,
+                "default": true
+            }
+        }
+    },
+    "actions": {
+        "createCategory": {
+            "type": "create",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "slug": {
+                    "type": "string",
+                    "required": true
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Category"
+            }
+        },
+        "listCategories": {
+            "type": "list",
+            "input": {
+                "isActive": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Category",
+                "isArray": true
+            }
+        },
+        "updateCategory": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "name": {
+                    "type": "string",
+                    "required": false
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Category"
+            }
+        }
+    }
+}

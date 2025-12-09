@@ -1,0 +1,108 @@
+{
+    "name": "customer",
+    "description": "E-commerce customers",
+    "models": {
+        "Customer": {
+            "email": {
+                "type": "string",
+                "required": true
+            },
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "phone": {
+                "type": "string",
+                "required": false
+            },
+            "address": {
+                "type": "string",
+                "required": false
+            },
+            "isVip": {
+                "type": "boolean",
+                "required": true,
+                "default": false
+            }
+        }
+    },
+    "actions": {
+        "registerCustomer": {
+            "type": "create",
+            "input": {
+                "email": {
+                    "type": "string",
+                    "required": true
+                },
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "phone": {
+                    "type": "string",
+                    "required": false
+                },
+                "address": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Customer"
+            }
+        },
+        "listCustomers": {
+            "type": "list",
+            "input": {
+                "isVip": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Customer",
+                "isArray": true
+            }
+        },
+        "getCustomer": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Customer"
+            }
+        },
+        "updateCustomer": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "phone": {
+                    "type": "string",
+                    "required": false
+                },
+                "address": {
+                    "type": "string",
+                    "required": false
+                },
+                "isVip": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Customer"
+            }
+        }
+    }
+}

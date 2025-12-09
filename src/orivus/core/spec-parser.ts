@@ -15,6 +15,7 @@ export type ParsedField = {
     isArray: boolean;
     target?: string;
     relationType?: string;
+    default?: any;
 };
 
 export type ParsedModel = {
@@ -59,7 +60,8 @@ function validateField(name: string, field: FieldDefinition): ParsedField {
         description: field.description ?? "",
         isArray: field.isArray ?? false,
         target: field.target,
-        relationType: field.relationType
+        relationType: field.relationType,
+        default: field.default
     };
 }
 

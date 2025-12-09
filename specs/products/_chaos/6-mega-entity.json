@@ -1,0 +1,296 @@
+{
+    "name": "megaEntity",
+    "description": "STRESS TEST: 20+ fields, 10+ actions - designed to break generators",
+    "models": {
+        "MegaEntity": {
+            "title": {
+                "type": "string",
+                "required": true
+            },
+            "subtitle": {
+                "type": "string",
+                "required": false
+            },
+            "description": {
+                "type": "string",
+                "required": false
+            },
+            "slug": {
+                "type": "string",
+                "required": true
+            },
+            "content": {
+                "type": "string",
+                "required": false
+            },
+            "summary": {
+                "type": "string",
+                "required": false
+            },
+            "tags": {
+                "type": "string",
+                "required": false
+            },
+            "category": {
+                "type": "string",
+                "required": false
+            },
+            "status": {
+                "type": "string",
+                "required": true,
+                "default": "draft"
+            },
+            "priority": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "sortOrder": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "viewCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "likeCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "shareCount": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "rating": {
+                "type": "number",
+                "required": false
+            },
+            "isActive": {
+                "type": "boolean",
+                "required": true,
+                "default": true
+            },
+            "isPublished": {
+                "type": "boolean",
+                "required": true,
+                "default": false
+            },
+            "isFeatured": {
+                "type": "boolean",
+                "required": true,
+                "default": false
+            },
+            "isArchived": {
+                "type": "boolean",
+                "required": true,
+                "default": false
+            },
+            "publishedAt": {
+                "type": "date",
+                "required": false
+            },
+            "expiresAt": {
+                "type": "date",
+                "required": false
+            },
+            "metadata": {
+                "type": "json",
+                "required": false
+            }
+        }
+    },
+    "actions": {
+        "createMegaEntity": {
+            "type": "create",
+            "input": {
+                "title": {
+                    "type": "string",
+                    "required": true
+                },
+                "slug": {
+                    "type": "string",
+                    "required": true
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity"
+            }
+        },
+        "listMegaEntities": {
+            "type": "list",
+            "input": {
+                "status": {
+                    "type": "string",
+                    "required": false
+                },
+                "isPublished": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity",
+                "isArray": true
+            }
+        },
+        "getMegaEntity": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity"
+            }
+        },
+        "updateMegaEntity": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "title": {
+                    "type": "string",
+                    "required": false
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                },
+                "content": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity"
+            }
+        },
+        "publishMegaEntity": {
+            "type": "update",
+            "description": "Publish the entity",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "isPublished": {
+                    "type": "boolean",
+                    "required": true
+                },
+                "publishedAt": {
+                    "type": "date",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity"
+            }
+        },
+        "archiveMegaEntity": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "isArchived": {
+                    "type": "boolean",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity"
+            }
+        },
+        "featureMegaEntity": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "isFeatured": {
+                    "type": "boolean",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity"
+            }
+        },
+        "updateStatus": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "status": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity"
+            }
+        },
+        "updateMetrics": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "viewCount": {
+                    "type": "number",
+                    "required": false
+                },
+                "likeCount": {
+                    "type": "number",
+                    "required": false
+                },
+                "shareCount": {
+                    "type": "number",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "MegaEntity"
+            }
+        },
+        "deleteMegaEntity": {
+            "type": "delete",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

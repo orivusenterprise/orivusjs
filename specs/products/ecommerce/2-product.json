@@ -1,0 +1,133 @@
+{
+    "name": "product",
+    "description": "Products with pricing and inventory",
+    "models": {
+        "Product": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "sku": {
+                "type": "string",
+                "required": true,
+                "description": "Stock Keeping Unit"
+            },
+            "description": {
+                "type": "string",
+                "required": false
+            },
+            "price": {
+                "type": "number",
+                "required": true,
+                "description": "Price in cents"
+            },
+            "stock": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "isAvailable": {
+                "type": "boolean",
+                "required": true,
+                "default": true
+            },
+            "category": {
+                "type": "relation",
+                "target": "Category",
+                "relationType": "belongsTo",
+                "required": false
+            }
+        }
+    },
+    "actions": {
+        "createProduct": {
+            "type": "create",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "sku": {
+                    "type": "string",
+                    "required": true
+                },
+                "description": {
+                    "type": "string",
+                    "required": false
+                },
+                "price": {
+                    "type": "number",
+                    "required": true
+                },
+                "categoryId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Product"
+            }
+        },
+        "listProducts": {
+            "type": "list",
+            "input": {
+                "categoryId": {
+                    "type": "string",
+                    "required": false
+                },
+                "isAvailable": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Product",
+                "isArray": true
+            }
+        },
+        "getProduct": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Product"
+            }
+        },
+        "updateProduct": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "name": {
+                    "type": "string",
+                    "required": false
+                },
+                "price": {
+                    "type": "number",
+                    "required": false
+                },
+                "stock": {
+                    "type": "number",
+                    "required": false
+                },
+                "isAvailable": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Product"
+            }
+        }
+    }
+}

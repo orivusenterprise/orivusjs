@@ -1,0 +1,21 @@
+{
+    "$schema": "orivus-product-manifest",
+    "name": "OrivusJS Chaos Test",
+    "version": "1.0.0",
+    "description": "Extreme stress test designed to BREAK the framework",
+    "executionOrder": [
+        "1-level-a.json",
+        "2-level-b.json",
+        "3-level-c.json",
+        "4-level-d.json",
+        "5-level-e.json",
+        "6-mega-entity.json",
+        "7-triple-ref.json"
+    ],
+    "stressTests": {
+        "deepChain": "5 levels of nested relations (A→B→C→D→E)",
+        "megaEntity": "20+ fields, 10+ actions",
+        "tripleRef": "3 relations to same parent model",
+        "manyFields": "All data types combined"
+    }
+}

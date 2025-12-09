@@ -1,0 +1,103 @@
+{
+    "name": "relatedEntity",
+    "description": "Tests relations to BaseEntity",
+    "models": {
+        "RelatedEntity": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "notes": {
+                "type": "string",
+                "required": false
+            },
+            "baseRequired": {
+                "type": "relation",
+                "target": "BaseEntity",
+                "relationType": "belongsTo",
+                "required": true,
+                "description": "Required relation"
+            },
+            "baseOptional": {
+                "type": "relation",
+                "target": "BaseEntity",
+                "relationType": "belongsTo",
+                "required": false,
+                "description": "Optional relation (nullable FK)"
+            }
+        }
+    },
+    "actions": {
+        "linkRelatedEntity": {
+            "type": "create",
+            "description": "Non-standard CREATE name",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "notes": {
+                    "type": "string",
+                    "required": false
+                },
+                "baseRequiredId": {
+                    "type": "string",
+                    "required": true
+                },
+                "baseOptionalId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "RelatedEntity"
+            }
+        },
+        "listRelatedEntities": {
+            "type": "list",
+            "input": {
+                "baseRequiredId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "RelatedEntity",
+                "isArray": true
+            }
+        },
+        "getRelatedEntity": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "RelatedEntity"
+            }
+        },
+        "reassignRelatedEntity": {
+            "type": "update",
+            "description": "Non-standard UPDATE name",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "baseOptionalId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "RelatedEntity"
+            }
+        }
+    }
+}

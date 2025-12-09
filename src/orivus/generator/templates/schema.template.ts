@@ -76,7 +76,7 @@ export function generateSchemaFile(spec: ParsedModuleSpec): string {
                         // TODO: Check if fkName exists in model.fields to avoid duplication? 
                         // Zod object duplicates override, so last one wins. Safe enough.
 
-                        const zodType = field.required ? "z.string()" : "z.string().optional()";
+                        const zodType = field.required ? "z.string()" : "z.string().nullish()";
                         return `  ${fkName}: ${zodType}, // Relation FK`;
                     }
                     // For 'hasMany' or nested objects, we SKIP them in the base schema 

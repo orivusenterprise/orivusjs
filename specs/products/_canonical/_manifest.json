@@ -1,0 +1,42 @@
+{
+    "$schema": "orivus-product-manifest",
+    "name": "OrivusJS Canonical Test Suite",
+    "version": "1.0.0",
+    "description": "Exhaustive test covering ALL edge cases. Run before every release. If this passes, any real product will work.",
+    "executionOrder": [
+        "1-base-entity.json",
+        "2-related-entity.json",
+        "3-complex-entity.json"
+    ],
+    "coverage": {
+        "fieldTypes": [
+            "string",
+            "number",
+            "boolean",
+            "date",
+            "json"
+        ],
+        "fieldModifiers": [
+            "required",
+            "optional",
+            "default"
+        ],
+        "relationTypes": [
+            "belongsTo-required",
+            "belongsTo-optional"
+        ],
+        "actionTypes": [
+            "create",
+            "list",
+            "get",
+            "update",
+            "delete"
+        ],
+        "edgeCases": [
+            "pluralization (category->categories)",
+            "multiple relations to same model",
+            "non-standard action names",
+            "date handling in forms/tests"
+        ]
+    }
+}

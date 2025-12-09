@@ -1,0 +1,111 @@
+{
+    "name": "orderItem",
+    "description": "Line items within an order",
+    "models": {
+        "OrderItem": {
+            "quantity": {
+                "type": "number",
+                "required": true
+            },
+            "unitPrice": {
+                "type": "number",
+                "required": true,
+                "description": "Price at time of purchase in cents"
+            },
+            "subtotal": {
+                "type": "number",
+                "required": true,
+                "description": "quantity * unitPrice"
+            },
+            "order": {
+                "type": "relation",
+                "target": "Order",
+                "relationType": "belongsTo"
+            },
+            "product": {
+                "type": "relation",
+                "target": "Product",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "addItemToOrder": {
+            "type": "create",
+            "input": {
+                "orderId": {
+                    "type": "string",
+                    "required": true
+                },
+                "productId": {
+                    "type": "string",
+                    "required": true
+                },
+                "quantity": {
+                    "type": "number",
+                    "required": true
+                },
+                "unitPrice": {
+                    "type": "number",
+                    "required": true
+                },
+                "subtotal": {
+                    "type": "number",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "OrderItem"
+            }
+        },
+        "listOrderItems": {
+            "type": "list",
+            "input": {
+                "orderId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "OrderItem",
+                "isArray": true
+            }
+        },
+        "updateItemQuantity": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "quantity": {
+                    "type": "number",
+                    "required": true
+                },
+                "subtotal": {
+                    "type": "number",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "OrderItem"
+            }
+        },
+        "removeItem": {
+            "type": "delete",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

@@ -1,0 +1,131 @@
+{
+    "name": "order",
+    "description": "Customer orders with status tracking",
+    "models": {
+        "Order": {
+            "orderNumber": {
+                "type": "string",
+                "required": true
+            },
+            "status": {
+                "type": "string",
+                "required": true,
+                "default": "pending",
+                "description": "pending, confirmed, shipped, delivered, cancelled"
+            },
+            "total": {
+                "type": "number",
+                "required": true,
+                "default": 0,
+                "description": "Total in cents"
+            },
+            "shippingAddress": {
+                "type": "string",
+                "required": true
+            },
+            "notes": {
+                "type": "string",
+                "required": false
+            },
+            "customer": {
+                "type": "relation",
+                "target": "Customer",
+                "relationType": "belongsTo"
+            }
+        }
+    },
+    "actions": {
+        "createOrder": {
+            "type": "create",
+            "input": {
+                "orderNumber": {
+                    "type": "string",
+                    "required": true
+                },
+                "shippingAddress": {
+                    "type": "string",
+                    "required": true
+                },
+                "customerId": {
+                    "type": "string",
+                    "required": true
+                },
+                "notes": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Order"
+            }
+        },
+        "listOrders": {
+            "type": "list",
+            "input": {
+                "customerId": {
+                    "type": "string",
+                    "required": false
+                },
+                "status": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Order",
+                "isArray": true
+            }
+        },
+        "getOrder": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Order"
+            }
+        },
+        "updateOrderStatus": {
+            "type": "update",
+            "description": "Change order status",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "status": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Order"
+            }
+        },
+        "cancelOrder": {
+            "type": "update",
+            "description": "Cancel an order",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "status": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Order"
+            }
+        }
+    }
+}

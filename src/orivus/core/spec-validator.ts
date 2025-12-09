@@ -57,12 +57,17 @@ export function validateSpec(spec: ModuleSpec): ValidationResult {
     // 3. Models
     if (spec.models) {
         validateModels(spec, errors, warnings);
+        validateModelNaming(spec, warnings);
+        validateDefaultValues(spec, errors);
     }
 
     // 4. Actions
     if (spec.actions) {
         validateActions(spec, errors, warnings);
     }
+
+    // 5. Intelligent Validations (prevent generation failures)
+    validateListActionExists(spec, warnings);
 
     return {
         valid: errors.length === 0,
@@ -387,4 +392,83 @@ export function formatValidationResult(result: ValidationResult): string {
     }
 
     return lines.join("\n");
+}
+
+// ============================================================================
+// Intelligent Validations (Prevent common generation failures)
+// ============================================================================
+
+/**
+ * Validates that the module has a list action if it will be used in relation dropdowns.
+ * This prevents "listXxx not found" errors in generated UI forms.
+ */
+export function validateListActionExists(spec: ModuleSpec, warnings: ValidationWarning[]): void {
+    const actions = spec.actions || {};
+    const actionList = Object.values(actions);
+
+    // Check if any action has type: "list" or name contains "list"
+    const hasListAction = actionList.some(a =>
+        (a as any).type === 'list' ||
+        Object.keys(actions).some(name => name.toLowerCase().includes('list'))
+    );
+
+    if (!hasListAction) {
+        warnings.push({
+            code: "NO_LIST_ACTION",
+            message: `Module '${spec.name}' has no 'list' action. If this module is referenced by relations, UI forms will fail.`,
+            path: "actions"
+        });
+    }
+}
+
+/**
+ * Validates model names for potential pluralization issues.
+ * Warns about names that might pluralize incorrectly.
+ */
+export function validateModelNaming(spec: ModuleSpec, warnings: ValidationWarning[]): void {
+    const modelNames = Object.keys(spec.models || {});
+
+    modelNames.forEach(name => {
+        // Check for names ending in 'y' preceded by consonant (category, company, etc.)
+        if (name.endsWith('y') && !['a', 'e', 'i', 'o', 'u'].includes(name.charAt(name.length - 2).toLowerCase())) {
+            warnings.push({
+                code: "PLURALIZATION_NOTE",
+                message: `Model '${name}' ends in 'y'. List action should be 'list${name.slice(0, -1)}ies' (not 'list${name}s')`,
+                path: `models.${name}`
+            });
+        }
+    });
+}
+
+/**
+ * Validates that default values match their field types.
+ */
+export function validateDefaultValues(spec: ModuleSpec, errors: ValidationError[]): void {
+    const models = spec.models || {};
+
+    Object.entries(models).forEach(([modelName, model]) => {
+        Object.entries(model).forEach(([fieldName, field]) => {
+            const def = field as FieldDefinition;
+            if (def.default !== undefined) {
+                const defaultType = typeof def.default;
+                let expectedType: string;
+
+                switch (def.type) {
+                    case 'string': expectedType = 'string'; break;
+                    case 'number': expectedType = 'number'; break;
+                    case 'boolean': expectedType = 'boolean'; break;
+                    default: expectedType = 'any';
+                }
+
+                if (expectedType !== 'any' && defaultType !== expectedType) {
+                    errors.push({
+                        code: "INVALID_DEFAULT_TYPE",
+                        message: `Field '${fieldName}' has type '${def.type}' but default value is '${defaultType}'`,
+                        path: `models.${modelName}.${fieldName}`,
+                        suggestion: `Change default to a ${expectedType} value`
+                    });
+                }
+            }
+        });
+    });
 }

@@ -1,0 +1,94 @@
+{
+    "name": "tripleRef",
+    "description": "STRESS TEST: 3 relations to SAME model (LevelA) - tests Prisma relation naming",
+    "models": {
+        "TripleRef": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "primary": {
+                "type": "relation",
+                "target": "LevelA",
+                "relationType": "belongsTo",
+                "description": "Primary reference to LevelA"
+            },
+            "secondary": {
+                "type": "relation",
+                "target": "LevelA",
+                "relationType": "belongsTo",
+                "required": false,
+                "description": "Secondary reference to LevelA"
+            },
+            "tertiary": {
+                "type": "relation",
+                "target": "LevelA",
+                "relationType": "belongsTo",
+                "required": false,
+                "description": "Tertiary reference to LevelA"
+            }
+        }
+    },
+    "actions": {
+        "createTripleRef": {
+            "type": "create",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "primaryId": {
+                    "type": "string",
+                    "required": true
+                },
+                "secondaryId": {
+                    "type": "string",
+                    "required": false
+                },
+                "tertiaryId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "TripleRef"
+            }
+        },
+        "listTripleRefs": {
+            "type": "list",
+            "input": {
+                "primaryId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "TripleRef",
+                "isArray": true
+            }
+        },
+        "updateTripleRef": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "secondaryId": {
+                    "type": "string",
+                    "required": false
+                },
+                "tertiaryId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "TripleRef"
+            }
+        }
+    }
+}

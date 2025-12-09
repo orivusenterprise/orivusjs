@@ -1,0 +1,44 @@
+{
+    "name": "levelA",
+    "description": "Root level of deep chain",
+    "models": {
+        "LevelA": {
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "code": {
+                "type": "string",
+                "required": true
+            }
+        }
+    },
+    "actions": {
+        "createLevelA": {
+            "type": "create",
+            "input": {
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "code": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "LevelA"
+            }
+        },
+        "listLevelAs": {
+            "type": "list",
+            "input": {},
+            "output": {
+                "kind": "model",
+                "modelName": "LevelA",
+                "isArray": true
+            }
+        }
+    }
+}

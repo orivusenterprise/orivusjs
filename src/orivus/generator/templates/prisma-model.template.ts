@@ -30,7 +30,10 @@ export function generatePrismaModel(model: ParsedModel): string {
                 // If the relation is optional, the FK and Object must be optional
                 const optionalMod = !f.required ? "?" : "";
 
-                lines.push(`  ${f.name} ${targetModel}${optionalMod} @relation(fields: [${fkName}], references: [id])`);
+                // Unique relation name to prevent Prisma ambiguity when multiple relations to same model
+                const relationName = `${model.name}_${f.name}`;
+
+                lines.push(`  ${f.name} ${targetModel}${optionalMod} @relation("${relationName}", fields: [${fkName}], references: [id])`);
 
                 // Track that we need an FK field, unless it exists explicitly
                 if (!explicitFieldNames.has(fkName)) {
@@ -70,8 +73,17 @@ export function generatePrismaModel(model: ParsedModel): string {
 
         const arrayMod = f.isArray ? "[]" : "";
         const optionalMod = !f.required ? "?" : "";
+        let defaultAttr = "";
 
-        lines.push(`  ${f.name} ${prismaType}${arrayMod}${optionalMod}`);
+        if (f.default !== undefined) {
+            if (f.type === "string") {
+                defaultAttr = ` @default("${f.default}")`;
+            } else {
+                defaultAttr = ` @default(${f.default})`;
+            }
+        }
+
+        lines.push(`  ${f.name} ${prismaType}${arrayMod}${optionalMod}${defaultAttr}`);
     });
 
     // Inject missing Foreign Keys

@@ -10,6 +10,7 @@ export type FieldDefinition = {
     // Relation specifics
     target?: string;       // Name of the target model (e.g., "User")
     relationType?: RelationType;
+    default?: any;
 };
 
 export type ModelSchema = Record<string, FieldDefinition>;

@@ -283,6 +283,23 @@ async function main(): Promise<void> {
     log("✅", `All ${result.modulesGenerated} modules generated`);
 
     // =========================================================================
+    // Step 3.5: Prisma Generate (sync client with schema)
+    // =========================================================================
+    console.log("\n" + "-".repeat(40));
+    log("🔄", "Running prisma generate...");
+
+    const prismaGenResult = runCommand("npx prisma generate", projectRoot);
+    if (!prismaGenResult.success) {
+        result.errors.push("Prisma generate failed");
+        console.log("❌ Prisma generate failed:");
+        console.log(prismaGenResult.output);
+        result.duration = Date.now() - startTime;
+        printResult(result);
+        process.exit(1);
+    }
+    log("✅", "Prisma client generated");
+
+    // =========================================================================
     // Step 4: TypeScript check
     // =========================================================================
     console.log("\n" + "-".repeat(40));

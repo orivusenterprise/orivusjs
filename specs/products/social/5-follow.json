@@ -1,0 +1,93 @@
+{
+    "name": "follow",
+    "description": "Follow relationships between profiles - SELF-REFERENTIAL",
+    "models": {
+        "Follow": {
+            "follower": {
+                "type": "relation",
+                "target": "Profile",
+                "relationType": "belongsTo",
+                "description": "The user who follows"
+            },
+            "following": {
+                "type": "relation",
+                "target": "Profile",
+                "relationType": "belongsTo",
+                "description": "The user being followed"
+            },
+            "isAccepted": {
+                "type": "boolean",
+                "required": true,
+                "default": true,
+                "description": "For private accounts"
+            }
+        }
+    },
+    "actions": {
+        "followProfile": {
+            "type": "create",
+            "input": {
+                "followerId": {
+                    "type": "string",
+                    "required": true
+                },
+                "followingId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Follow"
+            }
+        },
+        "listFollows": {
+            "type": "list",
+            "input": {
+                "followerId": {
+                    "type": "string",
+                    "required": false
+                },
+                "followingId": {
+                    "type": "string",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Follow",
+                "isArray": true
+            }
+        },
+        "acceptFollow": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "isAccepted": {
+                    "type": "boolean",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "Follow"
+            }
+        },
+        "unfollowProfile": {
+            "type": "delete",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}

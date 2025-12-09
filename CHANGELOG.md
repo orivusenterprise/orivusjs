@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.4.5-alpha] - 2025-12-08
+
+### 🎯 Theme: "Zero-Touch Core"
+
+> *"If a product requires touching the core to generate successfully, the framework has failed."*
+
+This release focuses on architectural stability and exhaustive testing. The framework was stress-tested with 4 products (21 modules total) without requiring any manual intervention.
+
+### Added
+- **Centralized Action Resolver** (`src/orivus/core/action-resolver.ts`): Single source of truth for action selection logic across all templates.
+- **Intelligent Pre-Generation Validation**:
+  - `validateListActionExists()` - Warns if no list action exists for relation dropdowns.
+  - `validateModelNaming()` - Warns about pluralization edge cases (category → categories).
+  - `validateDefaultValues()` - Errors if default value type doesn't match field type.
+- **Prisma Generate Step**: E2E test now runs `prisma generate` before TypeScript check.
+- **Proper Pluralization**: Added `pluralize()` function for correct English pluralization (category → categories, box → boxes).
+
+### Fixed
+- **Date Handling in Tests**: Tests now pass native `Date` objects instead of ISO strings for tRPC caller compatibility.
+- **Date Handling in UI Forms**: Proper Date lifecycle (Date → string for input value, string → Date for onChange).
+- **Multiple Relations to Same Model**: Added unique relation names (`@relation("ModelName_fieldName")`) to prevent Prisma ambiguity errors.
+- **Module Name Casing**: Changed from `toLowerCase()` to `toCamelCase()` for proper tRPC router references (BaseEntity → baseEntity, not baseentity).
+- **Action Selection Consistency**: Eliminated duplicate heuristics across templates by using centralized `action-resolver.ts`.
+
+### Verification (Stress Testing)
+All products generated successfully with **0 errors** and **0 core modifications**:
+
+| Product | Modules | Complexity | Status |
+|---------|---------|------------|--------|
+| E-commerce | 5 | Medium | ✅ PASSED |
+| Canonical Test | 3 | High (edge cases) | ✅ PASSED |
+| Social Network | 6 | High (self-referential) | ✅ PASSED |
+| Chaos Test | 7 | **EXTREME** | ✅ PASSED |
+
+**Chaos Test Details:**
+- 5 levels of nested relations (A→B→C→D→E)
+- 22 fields, 10 actions per entity
+- 3 relations to same parent model (TripleRef)
+- All data types combined
+
+### Test Coverage
+- Framework Tests: 123 passed
+- Integration Tests: 15 passed (Chaos), 14 passed (Social), 13 passed (E-commerce), 11 passed (Canonical)
+
+---
+
 ## [0.4.4-alpha] - 2025-12-08
 
 ### 🎯 Theme: "Deterministic Developer Experience"

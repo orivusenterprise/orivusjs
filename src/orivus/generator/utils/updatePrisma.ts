@@ -54,12 +54,14 @@ export function updatePrismaSchema(spec: ParsedModuleSpec, root: string) {
             if (field.type === "relation" && field.relationType === "belongsTo" && field.target) {
                 const parentModel = field.target;
                 const childModel = model.name;
-                const inverseFieldName = inferInverseFieldName(childModel);
+                // Use field.name as the unique identifier to generate consistent relation names
+                const relationName = `${childModel}_${field.name}`;
+                const inverseFieldName = `${field.name}${childModel}s`; // More unique to avoid collisions
 
-                // The inverse relation: User.posts Post[]
+                // The inverse relation: User.posts Post[] @relation("Child_parentRequired")
                 inverseRelations.push({
                     parentModel,
-                    fieldLine: `  ${inverseFieldName} ${childModel}[]`
+                    fieldLine: `  ${inverseFieldName} ${childModel}[] @relation("${relationName}")`
                 });
             }
         });

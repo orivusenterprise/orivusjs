@@ -1,0 +1,21 @@
+{
+    "$schema": "orivus-product-manifest",
+    "name": "Orivus Social Network",
+    "version": "1.0.0",
+    "description": "Advanced social network with posts, comments, likes, follows, and messaging",
+    "executionOrder": [
+        "1-profile.json",
+        "2-post.json",
+        "3-comment.json",
+        "4-like.json",
+        "5-follow.json",
+        "6-message.json"
+    ],
+    "features": {
+        "profiles": "User profiles with bio and avatar",
+        "posts": "Text and media posts",
+        "engagement": "Comments and likes on posts",
+        "social": "Follow/unfollow system",
+        "messaging": "Direct messages between users"
+    }
+}

@@ -1,4 +1,5 @@
 import { ParsedModuleSpec, ParsedField } from "../../core/spec-parser";
+import { findListAction } from "../../core/action-resolver";
 
 /**
  * Generates a List component for a module
@@ -9,11 +10,8 @@ export function generateListComponent(spec: ParsedModuleSpec): string {
     const modelName = model.name;
     const moduleName = spec.moduleName;
 
-    const listAction = spec.actions.find(a =>
-        a.name.toLowerCase().includes('list') ||
-        a.name.toLowerCase().includes('all') ||
-        a.name.toLowerCase().includes('get')
-    );
+    // Use centralized action resolver - single source of truth
+    const listAction = findListAction(spec.actions);
 
     if (!listAction) {
         return `// No list action found for ${modelName}`;

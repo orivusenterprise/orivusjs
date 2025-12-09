@@ -1,0 +1,151 @@
+{
+    "name": "baseEntity",
+    "description": "Tests ALL field types and modifiers",
+    "models": {
+        "BaseEntity": {
+            "title": {
+                "type": "string",
+                "required": true
+            },
+            "subtitle": {
+                "type": "string",
+                "required": false
+            },
+            "slug": {
+                "type": "string",
+                "required": true,
+                "default": "untitled"
+            },
+            "count": {
+                "type": "number",
+                "required": true
+            },
+            "priority": {
+                "type": "number",
+                "required": false
+            },
+            "sortOrder": {
+                "type": "number",
+                "required": true,
+                "default": 0
+            },
+            "isActive": {
+                "type": "boolean",
+                "required": true
+            },
+            "isPublished": {
+                "type": "boolean",
+                "required": false
+            },
+            "isFeatured": {
+                "type": "boolean",
+                "required": true,
+                "default": false
+            },
+            "publishDate": {
+                "type": "date",
+                "required": true
+            },
+            "expiryDate": {
+                "type": "date",
+                "required": false
+            },
+            "metadata": {
+                "type": "json",
+                "required": false
+            }
+        }
+    },
+    "actions": {
+        "createBaseEntity": {
+            "type": "create",
+            "input": {
+                "title": {
+                    "type": "string",
+                    "required": true
+                },
+                "count": {
+                    "type": "number",
+                    "required": true
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "required": true
+                },
+                "publishDate": {
+                    "type": "date",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "BaseEntity"
+            }
+        },
+        "listBaseEntities": {
+            "type": "list",
+            "input": {
+                "isActive": {
+                    "type": "boolean",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "BaseEntity",
+                "isArray": true
+            }
+        },
+        "getBaseEntity": {
+            "type": "get",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "BaseEntity"
+            }
+        },
+        "updateBaseEntity": {
+            "type": "update",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
+                "title": {
+                    "type": "string",
+                    "required": false
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "required": false
+                },
+                "expiryDate": {
+                    "type": "date",
+                    "required": false
+                }
+            },
+            "output": {
+                "kind": "model",
+                "modelName": "BaseEntity"
+            }
+        },
+        "deleteBaseEntity": {
+            "type": "delete",
+            "input": {
+                "id": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "output": {
+                "kind": "primitive",
+                "type": "boolean"
+            }
+        }
+    }
+}
