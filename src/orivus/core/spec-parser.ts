@@ -32,10 +32,12 @@ export type ParsedAction = {
 };
 
 export type ParsedModuleSpec = {
+    name: string; // Alias for moduleName (for kernel compatibility)
     moduleName: string;
     models: ParsedModel[];
     actions: ParsedAction[];
     skipUI?: boolean;
+    description?: string;
 };
 
 const SUPPORTED_TYPES = ["string", "number", "boolean", "date", "json", "relation"] as const;
@@ -143,9 +145,11 @@ export function parseModuleSpec(spec: ModuleSpec): ParsedModuleSpec {
     });
 
     return {
+        name: moduleName,
         moduleName,
         models: parsedModels,
         actions: parsedActions,
         skipUI: spec.skipUI,
+        description: spec.description || "",
     };
 }

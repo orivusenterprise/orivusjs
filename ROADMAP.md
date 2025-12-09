@@ -7,77 +7,103 @@ This roadmap outlines the path from v0.4 (Current) to v1.0 (AI-Native Singularit
 - [x] **v0.4.0**: Frontend Generation (React Components, Next.js Pages).
 - [x] **v0.4.1**: Backend-Only Modules (`skipUI`), Smart Merge Logic.
 - [x] **v0.4.2**: AI Governance (`AI_RULES.md`), Documentation (`/docs`), Test Stability.
+- [x] **v0.4.3**: The Stability Release - Template Test Suite, Spec Validator, E2E Tests.
+- [x] **v0.4.4**: Deterministic Developer Experience - Explicit action types, regex elimination.
+- [x] **v0.4.5**: Zero-Touch Core - Action resolver, 21 modules tested, architectural stability.
 
 ---
 
-## 🚨 Phase 0: Stability First (NEW)
-*Goal: The framework must "just work" before adding advanced features.*
+## 🚀 Phase 1: The Usable Foundation (CURRENT)
+*Goal: OrivusJS generates production-ready applications, not just code files.*
 
-### 🔹 v0.4.3: The Stability Release (CURRENT PRIORITY)
-**Motivation**: *"A framework that fails on a simple blog cannot promise AI-Native capabilities."*
+### 🔹 v0.5.0: The Usable Foundation Release (IN PROGRESS)
+**Theme**: *"Production-Ready Generated Code"*
 
-Focus on testing, validation, and reliability:
-- [ ] **Template Test Suite**: Unit tests for every template (Prisma, Schema, Router, Service, UI)
-- [ ] **Spec Validator**: Validate specs BEFORE generation with clear error messages
-- [ ] **E2E Generation Test**: `npm run orivus:e2e-test specs/products/blog` proves the pipeline works
-- [ ] **Better Error Messages**: Replace cryptic Prisma/tRPC errors with actionable guidance
-- [ ] **Blog Platform**: Must generate with zero manual intervention
+> OrivusJS deja de ser solo un generador de módulos y se convierte en un framework capaz de producir aplicaciones completas, cohesivas y listas para despliegue.
+
+#### Added
+- **Kernel Lite (Relation Graph)**: Lightweight version of the Orivus Kernel
+  - Understands dependencies between modules
+  - Detects cross-module relations
+  - Powers Smart Relations UI
+  - Prepares foundation for full Kernel in v0.6
+
+- **Smart Relations UI**: Auto-generate `<RelationSelect>` with:
+  - Debounced search
+  - Loading states
+  - Empty states
+  - Smart auto-selection
+  - Support for 1:N and N:1 relations
+
+- **Navigation v2**: Dynamic sidebar with:
+  - Auto-injected links from CLI
+  - Module grouping
+  - Active states
+  - Collapsible sections
+
+- **Form Validation Feedback**:
+  - Inline error messages
+  - Zod-derived messages
+  - "Touched" field tracking
+  - React Hook Form + Zod Resolver behavior
+
+- **Starter App**: Complete example in `/examples/starter-app/`
+  - Multiple modules with real relations
+  - Functional UI
+  - Ideal for demos and regression tests
+
+#### Improved
+- **UI Templates**: Loading skeletons, empty states, error boundaries
+- **Smart Merge v2**: Preserve `// ORIVUS:CUSTOM:` blocks across regenerations
+- **E2E Stability**: 25+ modules validated (CRM, PM, LMS specs)
 
 **Success Criteria**:
 ```bash
-npm run orivus:e2e-test specs/products/blog
-# ✅ Spec validation passed (4 modules)
-# ✅ Generation completed (16 files)  
-# ✅ All tests passed (4/4)
-# ✅ Blog Platform ready at http://localhost:3000
+npm run orivus:e2e-test specs/products/starter-app
+# ✅ All modules generated with Smart Relations
+# ✅ Navigation auto-populated
+# ✅ Forms have validation feedback
+# ✅ Application is navigable without code changes
 ```
 
-📄 See [docs/v0.4.3-STABILITY-PLAN.md](./docs/v0.4.3-STABILITY-PLAN.md) for full implementation plan.
+> **"Es la primera versión de OrivusJS que puede usarse para construir un producto real."**
 
 ---
 
-## 🏗️ Phase 1: Solid Foundation (UX & Production)
-*Goal: Ensure the generated code is "Senior Developer" quality before adding heavy AI.*
+## 🏗️ Phase 2: Production & AI Readiness
+*Goal: Make OrivusJS deployment-ready and prepare for AI integration.*
 
-### 🔹 v0.5.0: The Cohesive UI & Kernel Genesis
-Focus on usability and the birth of the Intelligence Engine.
-- **Orivus Kernel (Internal)**: A new core library that maps the entire schema graph to understand relationships deeply.
-- **Smart Relations UI**: Powered by the Kernel, automatically generate `<Select>`/Combobox inputs for foreign keys.
-- **Auto-Navigation**: Inject links into a dynamic Sidebar/AppShell.
-- **Enhanced UI Templates**: Professional Look & Feel.
-
-### 🔹 v0.6.0: The Kernel Service & Production Layer
-Focus on AI-readiness and deployment.
-- **Orivus Kernel (Service)**: Expose the "Context Protocol" (`orivus:context`). Generates a Project Map for Cursor/LLMs.
-- **Auth Scaffolding**: Standardize `protectedProcedure` and `ctx.session`.
-- **Role-Based Access**: Support roles in Specs.
-- **Deployment Ready**: Docker support.
-
----
-
-## 🧠 Phase 2: The Intelligence Layer
-*Goal: Make the framework "speak" the language of LLMs facilitated by local context.*
+### 🔹 v0.6.0: The Kernel Service & Auth Layer
+- **Orivus Kernel (Full)**: Complete schema understanding with query capabilities.
+- **Context Protocol Draft**: `orivus:context` command generates project manifest.
+- **Auth Scaffolding**: `protectedProcedure`, `ctx.session`, role-based access.
+- **Deployment Ready**: Docker support, environment configuration.
 
 ### 🔹 v0.7.0: The Context Protocol
-- **command `orivus:context`**: Generates a high-density "Project Map" (Markdown/JSON) optimized for LLM Context Windows.
-- **Benefits**: Allows Cursor/Windsurf/Copilot to understand the entire project state instantly without reading every file.
-
-### 🔹 v0.8.0: The Prompt Interface (NL-to-Spec)
-- **command `orivus prompt "..."`**: 
-- Integration with LLMs (Cloud or Local/Ollama) to generate valid JSON Specs from natural language descriptions.
+- **`orivus:context`**: High-density "Project Map" optimized for LLM context windows.
+- **Benefits**: Cursor/Windsurf/Copilot understand the entire project instantly.
 
 ---
 
-## 🤖 Phase 3: The Singularity (Autonomous)
-*Goal: Self-maintaining codebases.*
+## 🧠 Phase 3: The Intelligence Layer
+*Goal: Make the framework "speak" the language of LLMs.*
+
+### 🔹 v0.8.0: The Prompt Interface (NL-to-Spec)
+- **`orivus prompt "..."`**: Natural language to valid JSON specs.
+- Integration with LLMs (Cloud or Local/Ollama).
 
 ### 🔹 v0.9.0: Self-Healing
-- **Auto-Fixer Agents**: If `npm run test` fails, the CLI analyzes the stack trace and patches the implementation or test.
-- **Smart Seeding**: Auto-generate realistic mock data for local development based on schema constraints.
+- **Auto-Fixer Agents**: Analyze test failures and patch automatically.
+- **Smart Seeding**: Auto-generate realistic mock data.
+
+---
+
+## 🤖 Phase 4: The Singularity (Autonomous)
+*Goal: Self-maintaining codebases.*
 
 ### 🏆 v1.0.0: General Availability
-- Full Stability.
-- Plugin Ecosystem.
+- Full stability and production-proven.
+- Plugin ecosystem for custom generators.
 - The first truly AI-Native Full-Stack Framework.
 
 ---
@@ -86,10 +112,11 @@ Focus on AI-readiness and deployment.
 
 | Version | Key Deliverable | Status |
 |---------|-----------------|--------|
-| v0.4.3 | Blog generates first-try | 🔴 In Progress |
-| v0.5.0 | Kernel + Smart Relations | ⬜ Planned |
-| v0.6.0 | Context Protocol | ⬜ Planned |
-| v0.7.0 | NL-to-Spec | ⬜ Planned |
+| v0.4.5 | Zero-Touch Core | ✅ Complete |
+| v0.5.0 | Kernel Lite + Smart Relations | 🔴 In Progress |
+| v0.6.0 | Full Kernel + Auth | ⬜ Planned |
+| v0.7.0 | Context Protocol | ⬜ Planned |
+| v0.8.0 | NL-to-Spec | ⬜ Planned |
 | v1.0.0 | GA Release | ⬜ Future |
 
 ---
