@@ -118,6 +118,28 @@ ${resetStatements}
         mutation.mutate({ ${inputObject} });
     };
 
+    const getFieldError = (field: string) => {
+        // 1. Try standard tRPC Zod error (if aggregated by superjson/trpc)
+        const zodError = (mutation.error as any)?.data?.zodError;
+        if (zodError?.fieldErrors?.[field]) {
+             return zodError.fieldErrors[field][0];
+        }
+
+        // 2. Fallback: Parse raw Zod array from message (common in some tRPC configs)
+        const msg = mutation.error?.message;
+        if (msg && msg.startsWith('[') && msg.includes('"code":')) {
+            try {
+                const parsed = JSON.parse(msg);
+                const fieldErr = parsed.find((e: any) => e.path.includes(field));
+                if (fieldErr) return fieldErr.message;
+            } catch { /* ignore parse errors */ }
+        }
+        return null;
+    };
+
+    const isRawZodError = mutation.error?.message.startsWith('[') && mutation.error?.message.includes('"code":');
+    const globalErrorMessage = isRawZodError ? "Please check the highlighted fields." : mutation.error?.message;
+
     return (
         <Card>
             <CardHeader>
@@ -134,7 +156,7 @@ ${formFields}
                         {mutation.isLoading ? "Creating..." : "Create ${modelName}"}
                     </Button>
                     {mutation.error && (
-                        <p className="text-destructive text-sm">{mutation.error.message}</p>
+                        <p className="text-destructive text-sm text-center">{globalErrorMessage}</p>
                     )}
                 </form>
             </CardContent>
@@ -156,16 +178,21 @@ function generateRelationField(field: ParsedField, targetModel: string): string 
     const isRequired = field.required;
 
     return `            {/* Smart Relation: ${targetModel} */}
-            <RelationSelect
-                label="${label}"
-                items={${optionsName} || []}
-                value={${field.name}}
-                onChange={${setterName}}
-                isLoading={${loadingName}}
-                placeholder="Select ${label.toLowerCase()}..."
-                required={${isRequired}}
-                searchable={true}
-            />`;
+            <div className="space-y-2">
+                <RelationSelect
+                    label="${label}"
+                    items={${optionsName} || []}
+                    value={${field.name}}
+                    onChange={${setterName}}
+                    isLoading={${loadingName}}
+                    placeholder="Select ${label.toLowerCase()}..."
+                    required={${isRequired}}
+                    searchable={true}
+                />
+                {getFieldError('${field.name}') && (
+                    <p className="text-sm text-destructive">{getFieldError('${field.name}')}</p>
+                )}
+            </div>`;
 }
 
 function generateFormField(field: ParsedField): string {
@@ -187,26 +214,37 @@ function generateFormField(field: ParsedField): string {
         case "date": inputType = "date"; break;
     }
 
+    // Common error display chunk
+    const errorDisplay = `{getFieldError('${field.name}') && <p className="text-sm text-destructive">{getFieldError('${field.name}')}</p>}`;
+    // For inside template literals (backticks): ${condition ? ... : ...}
+    const errorTemplate = `\${getFieldError('${field.name}') ? "border-destructive" : ""}`;
+    // For direct JSX prop: condition ? ... : ...
+    const errorExpression = `getFieldError('${field.name}') ? "border-destructive" : ""`;
+
     if (inputElement === "textarea") {
         return `            <div className="space-y-2">
                 <Label>${label}</Label>
                 <textarea
                     value={${field.name}}
                     onChange={(e) => ${setterName}(e.target.value)}
-                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className={\`flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errorTemplate}\`}
                     required={${field.required}}
                 />
+                ${errorDisplay}
             </div>`;
     }
 
     if (inputType === "checkbox") {
-        return `            <div className="flex items-center space-x-2">
-                <Switch
-                    id="${field.name}"
-                    checked={${field.name}}
-                    onCheckedChange={(checked) => ${setterName}(checked)}
-                />
-                <Label htmlFor="${field.name}">${label}</Label>
+        return `            <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                    <Switch
+                        id="${field.name}"
+                        checked={${field.name}}
+                        onCheckedChange={(checked) => ${setterName}(checked)}
+                    />
+                    <Label htmlFor="${field.name}">${label}</Label>
+                </div>
+                ${errorDisplay}
             </div>`;
     }
 
@@ -217,8 +255,10 @@ function generateFormField(field: ParsedField): string {
                     type="date"
                     value={${field.name} instanceof Date ? ${field.name}.toISOString().split('T')[0] : ''}
                     onChange={(e) => ${setterName}(e.target.value ? new Date(e.target.value) : undefined)}
+                    className={${errorExpression}}
                     required={${field.required}}
                 />
+                ${errorDisplay}
             </div>`;
     }
 
@@ -228,8 +268,10 @@ function generateFormField(field: ParsedField): string {
                     type="${inputType}"
                     value={${field.name}}
                     onChange={(e) => ${setterName}(${inputType === 'number' ? 'Number(e.target.value)' : 'e.target.value'})}
+                    className={${errorExpression}}
                     required={${field.required}}
                 />
+                ${errorDisplay}
             </div>`;
 }
 

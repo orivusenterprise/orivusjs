@@ -218,6 +218,53 @@ describe("ui-form.template", () => {
         });
     });
 
+    describe("Validation Feedback", () => {
+        it("generates getFieldError helper", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "createUser",
+                    input: [{ name: "name", type: "string", required: true, description: "", isArray: false }],
+                    output: { kind: "model", modelName: "User" }
+                }]
+            });
+
+            const result = generateFormComponent(spec);
+
+            expect(result).toContain("const getFieldError =");
+            expect(result).toContain("(mutation.error as any)?.data?.zodError"); // Standard check
+            expect(result).toContain("JSON.parse(msg)"); // Fallback check
+        });
+
+        it("renders error message for fields", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "createUser",
+                    input: [{ name: "name", type: "string", required: true, description: "", isArray: false }],
+                    output: { kind: "model", modelName: "User" }
+                }]
+            });
+
+            const result = generateFormComponent(spec);
+
+            expect(result).toContain("getFieldError('name') &&");
+            expect(result).toContain("text-destructive");
+        });
+
+        it("applies error class to Input", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "createUser",
+                    input: [{ name: "name", type: "string", required: true, description: "", isArray: false }],
+                    output: { kind: "model", modelName: "User" }
+                }]
+            });
+
+            const result = generateFormComponent(spec);
+
+            expect(result).toContain("border-destructive");
+        });
+    });
+
     describe("Form Structure", () => {
         it("wraps in Card component", () => {
             const spec = createSpec({
