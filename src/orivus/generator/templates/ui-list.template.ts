@@ -44,19 +44,49 @@ export function generateListComponent(spec: ParsedModuleSpec): string {
 
 import { trpc } from "@/utils/trpc";
 import { Card, CardHeader, CardTitle, CardContent } from "@orivus-ui/components/Card";
+import { Skeleton } from "@orivus-ui/components/Skeleton";
+import { EmptyState } from "@orivus-ui/components/EmptyState";
+import { AlertCircle } from "lucide-react";
 
 export function ${modelName}List() {
-    const { data: items, isLoading } = trpc.${moduleName}.${actionName}.useQuery(${queryArg});
+    const { data: items, isLoading, error } = trpc.${moduleName}.${actionName}.useQuery(${queryArg});
 
-    if (isLoading) return <div className="p-4 text-muted-foreground">Loading ${moduleName}s...</div>;
+    if (isLoading) {
+        return (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {[...Array(6)].map((_, i) => (
+                    <Card key={i} className="h-[200px]">
+                        <CardHeader className="pb-2">
+                            <Skeleton className="h-6 w-3/4" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-5/6" />
+                                <Skeleton className="h-4 w-1/2" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="rounded-md bg-destructive/15 p-4 text-destructive flex items-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                <span>Error loading ${moduleName}s: {error.message}</span>
+            </div>
+        );
+    }
 
     if (!items || items.length === 0) {
         return (
-            <Card>
-                <CardContent className="pt-6 text-center text-muted-foreground">
-                    No ${moduleName}s found.
-                </CardContent>
-            </Card>
+            <EmptyState 
+                title="No ${moduleName}s found"
+                description="Get started by creating your first ${moduleName}."
+            />
         );
     }
 

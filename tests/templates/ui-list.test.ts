@@ -197,7 +197,7 @@ describe("ui-list.template", () => {
             expect(result).toContain("export function UserList()");
         });
 
-        it("has loading state", () => {
+        it("has loading state with Skeleton", () => {
             const spec = createSpec({
                 actions: [{
                     name: "listUsers",
@@ -208,10 +208,10 @@ describe("ui-list.template", () => {
             const result = generateListComponent(spec);
 
             expect(result).toContain("isLoading");
-            expect(result).toContain("Loading users");
+            expect(result).toContain("Skeleton"); // Now uses Skeleton
         });
 
-        it("has empty state", () => {
+        it("has empty state with EmptyState component", () => {
             const spec = createSpec({
                 actions: [{
                     name: "listUsers",
@@ -221,7 +221,22 @@ describe("ui-list.template", () => {
 
             const result = generateListComponent(spec);
 
+            expect(result).toContain("EmptyState");
             expect(result).toContain("No users found");
+        });
+
+        it("has error handling", () => {
+            const spec = createSpec({
+                actions: [{
+                    name: "listUsers",
+                    output: { kind: "model", modelName: "User", isArray: true }
+                }]
+            });
+
+            const result = generateListComponent(spec);
+
+            expect(result).toContain("if (error)");
+            expect(result).toContain("Error loading users");
         });
 
         it("uses Card components", () => {
