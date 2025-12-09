@@ -145,24 +145,27 @@ ${formFields}
 }
 
 /**
- * Generates a RelationSelect field for FK inputs
+ * Generates a RelationSelect field for FK inputs (v2)
+ * Uses the new Smart Relations component with search and better UX
  */
 function generateRelationField(field: ParsedField, targetModel: string): string {
-    const label = targetModel; // Use model name instead of "AuthorId"
+    const label = formatLabel(field.name.replace(/Id$/, '')); // "authorId" -> "Author"
     const setterName = `set${capitalize(field.name)}`;
     const optionsName = `${field.name}Options`;
     const loadingName = `is${capitalize(field.name)}Loading`;
+    const isRequired = field.required;
 
-    return `            <div className="space-y-2">
-                <Label>${label}</Label>
-                <RelationSelect
-                    items={${optionsName} || []}
-                    value={${field.name}}
-                    onChange={${setterName}}
-                    isLoading={${loadingName}}
-                    placeholder="Select ${targetModel}..."
-                />
-            </div>`;
+    return `            {/* Smart Relation: ${targetModel} */}
+            <RelationSelect
+                label="${label}"
+                items={${optionsName} || []}
+                value={${field.name}}
+                onChange={${setterName}}
+                isLoading={${loadingName}}
+                placeholder="Select ${label.toLowerCase()}..."
+                required={${isRequired}}
+                searchable={true}
+            />`;
 }
 
 function generateFormField(field: ParsedField): string {
@@ -266,4 +269,12 @@ function pluralize(word: string): string {
 function toCamelCase(str: string): string {
     // Convert PascalCase to camelCase: BaseEntity -> baseEntity
     return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+function formatLabel(str: string): string {
+    // Convert camelCase to Title Case: authorId -> Author, categoryName -> Category Name
+    return str
+        .replace(/([A-Z])/g, ' $1') // Add space before capitals
+        .replace(/^./, s => s.toUpperCase()) // Capitalize first letter
+        .trim();
 }

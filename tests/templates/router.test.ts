@@ -14,6 +14,7 @@ import { ParsedModuleSpec } from "../../src/orivus/core/spec-parser";
 
 function createSpec(overrides: Partial<ParsedModuleSpec> = {}): ParsedModuleSpec {
     return {
+        name: "user",
         moduleName: "user",
         models: [{
             name: "User",

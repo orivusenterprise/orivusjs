@@ -14,6 +14,7 @@ import { ParsedModuleSpec } from "../../src/orivus/core/spec-parser";
 
 function createSpec(overrides: Partial<ParsedModuleSpec> = {}): ParsedModuleSpec {
     return {
+        name: "user",
         moduleName: "user",
         models: [{
             name: "User",
@@ -74,6 +75,7 @@ describe("ui-form.template", () => {
     describe("FK Field Detection (*Id pattern)", () => {
         it("detects authorId as FK and generates RelationSelect", () => {
             const spec: ParsedModuleSpec = {
+                name: "post",
                 moduleName: "post",
                 models: [{
                     name: "Post",
