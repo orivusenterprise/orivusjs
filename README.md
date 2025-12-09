@@ -1,4 +1,4 @@
-# 🪐 OrivusJS (v0.4.5-alpha)
+# 🪐 OrivusJS (v0.5.0-alpha)
 
 > **The AI-Native Framework for Building Modern Startups.**  
 > Describe your domain. Generate your backend. Build at the speed of thought.
@@ -58,25 +58,19 @@ LLMs perform best when the framework provides:
 OrivusJS is designed around those constraints — not as an afterthought, but as a foundational concept.
 
 ### 3. **End-to-End Type Safety**
-The entire stack — DB → Service → Router — is fully typed:
+The entire stack — DB → Service → Router → UI — is fully typed:
 
 - Prisma  
 - Zod  
 - tRPC  
+- React / Tailwind
 
 LLMs understand types, and types guide them to produce better, safer code.
 
-### 4. **Zero Boilerplate for 90% of CRUD**
-You never write:
-
-- routers  
-- services  
-- DTOs  
-- validation schemas  
-- database models  
-- integration tests  
-
-OrivusJS generates all of them with perfect consistency.
+### 4. **Smart Merge Protection** (New in v0.5)
+Modify generated code with confidence. OrivusJS uses **checksum-based collision detection**:
+- ✅ **Safe Updates**: Regenerating a module *updates* the file if you haven't touched it.
+- 🛡️ **Conflict Protection**: If you modified a file manually, OrivusJS detects it and saves the new version as `.new`, preserving your work.
 
 ---
 
@@ -85,10 +79,13 @@ OrivusJS generates all of them with perfect consistency.
 ### 1. Installation
 
 ```bash
-git clone https://github.com/orivus/orivusjs.git
+git clone https://github.com/orivusenterprise/orivusjs.git
 cd orivusjs
 npm install
+npm run dev
 ```
+
+Visit `http://localhost:3000` to see the **Developer Dashboard**.
 
 ### 2. Define your Module Spec
 
@@ -133,23 +130,25 @@ npm run orivus:create specs/examples/blog-simple.json
 - ✅ `post.service.ts` — business logic with Prisma
 - ✅ `post.router.ts` — tRPC API ready to use
 - ✅ `post.test.ts` — integration tests
+- ✅ `ui/CreatePostForm.tsx` — React Form with Validation
+- ✅ `ui/PostList.tsx` — List with Skeletons & Empty States
 - ✅ `schema.prisma` — new DB model
-- ✅ Database auto-synced
-- ✅ Router auto-registered
+- ✅ Database auto-synced & Navigation updated
 
 Developers focus on the domain.
 OrivusJS handles the rest.
 
 ---
 
-## 🏗️ Architecture (v0.4)
+## 🏗️ Architecture (v0.5)
 
 ```
 src/
-  ├── domain/
+  ├── app/               # Next.js App Router
+  ├── domain/            # Vertical Slices (Modules)
   │   ├── user/
   │   └── post/
-  ├── orivus/
+  ├── orivus/            # Framework Core
   │   ├── core/          # Spec types & parsing
   │   ├── generator/     # Code generation engine
   │   └── cli/           # OrivusJS CLI
@@ -166,67 +165,44 @@ This ensures:
 
 ---
 
+## 🔮 What's New in v0.5.0-alpha
 
-## 🔮 What's New in v0.4.4-alpha
+### 💎 Theme: "Premium Developer Experience"
 
-### 🎯 Theme: "Deterministic Developer Experience"
+> *"It just works, and it looks good doing it."*
 
-> *"Explicit is better than implicit."*
+**�️ Smart Merge Protection**
+- **Safe Hashing**: Files are stamped with check-sums to detect manual edits.
+- **No Data Loss**: Conflict resolution never overwrites your custom code.
 
-**🛠️ Deterministic Generation**
-- **Explicit Action Types**: Eliminating "magic" guesswork. Define `type: "create" | "update" | "list" | ...` in your spec and get guaranteed results.
-- **Robustness**: 100% predictable service and router generation.
+**� UI Polish & UX**
+- **Validation Feedback**: Real-time error messages on form fields (no more raw JSON errors).
+- **Loading Skeletons**: Smooth shimmering loading states for lists.
+- **Empty States**: Beautiful illustrations when no data is found.
+- **Navigation v2**: Grouped sidebar items for multi-module products.
 
-**📦 SaaS LMS (Complex Example)**
-- Successfully generates a **6-module Learning Management System** with complex relations.
-- **Modules**: `Instructor`, `Course`, `Lesson`, `Student`, `Enrollment`, `Progress`.
-- **Zero manual fixes required.**
-
----
-
-### Previous: v0.4.3 (The Stability Release)
-
-**🧪 Template Tests (119 tests)**
-- 96 tests for all generation templates
-- 23 tests for spec validation
-
-**✅ Spec Validator**
-- Validates specs BEFORE generation
-- Clear error messages with suggestions
-
-**🚀 E2E Test Command**
-- Validates pipeline integrity on Blog & LMS products.
-
-**E2E Test Result:**
-```
-✅ PASSED: SaaS LMS (6 modules)
-   Tests: 14/14
-```
+**🚀 Starter Experience**
+- **New Dashboard**: A functional landing page with system health, quick actions, and resource links.
 
 ---
 
-### Previous Features
+### Previous: v0.4.x
 
-**v0.4.2** - AI Governance (`AI_RULES.md`), In-app docs
-
-**v0.4.1** - Backend-only modules (`skipUI`)
-
-**v0.4.0** - Frontend generation (React, Next.js pages)
-
-**v0.3** - Relations Engine (`hasMany`, `belongsTo`, `hasOne`)
+**v0.4.5** - Navigation Groups & Relation Pickers
+**v0.4.4** - Deterministic Generation (Spec v2)
+**v0.4.3** - Stability Release (E2E Tests)
+**v0.4.0** - Frontend Generation (React/Tailwind)
 
 ---
 
-## 🚀 Roadmap to v0.5
+## 🚀 Roadmap
 
 **Coming next:**
 
-- [ ] **AI Spec Generator**: Natural language → JSON Spec
-  - *Example*: `orivus ask "Build a task manager with priorities"`
-- [ ] **Advanced UI Components**: Detail/Edit views, pagination, search
-- [ ] **Form Validation**: Client-side Zod validation with error messages
-- [ ] **Unit Testing**: Generate `service.spec.ts` with Prisma mocks
-- [ ] **Deployment Templates**: Docker, Vercel, Railway configs
+- [ ] **AI Spec Generator**: Natural language → JSON Spec (`orivus ask`)
+- [ ] **Deploy Utils**: Docker, Vercel, Railway configs
+- [ ] **Auth Pre-built**: Integrated Authentication module
+- [ ] **File Uploads**: Native support for S3/Blob storage fields
 
 These are the foundations for a future where **building a startup is as simple as describing it**.
 

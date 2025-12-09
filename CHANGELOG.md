@@ -5,6 +5,38 @@ All notable changes to OrivusJS will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0-alpha] - 2025-12-09
+
+### 🎯 Theme: "Premium Developer Experience"
+
+> *"It just works, and it looks good doing it."*
+
+This release focuses on improving the workflow for developers, adding protections against code loss, enhancing the UI library, and providing a polished starter experience.
+
+### Added
+- **Smart Merge Protection** (`src/orivus/generator/utils/writeFile.ts`):
+  - **Checksum-based Detection**: Automatically detects if a file has been modified manually.
+  - **Safe Updates**: Updates generated files ONLY if they haven't been touched by the user.
+  - **Conflict Resolution**: Creates `.new` files instead of overwriting user changes, preserving work.
+- **Improved UI Templates**:
+  - **Validation Feedback**: Forms now show error messages directly under the field.
+  - **Loading Skeletons**: Lists show shimmer effects while fetching data.
+  - **Empty States**: Friendly illustrations when no data is present.
+  - **Navigation Groups**: Sidebar now supports collapsible groupings for modules.
+- **Developer Dashboard**:
+  - Replaced landing page with a functional Dashboard.
+  - Added System Stats (Health, DB, Latency).
+  - Added Quick Start guide and documentation links.
+- **In-App Documentation**:
+  - Full documentation hub at `/docs` with sticky sidebar navigation.
+  - Architecture and Spec Guides included.
+- **Design System**: Added `Badge` component.
+
+### Fixed
+- **AppShell Layout**: Refactored to use native Window Scroll instead of nested overflow containers, fixing sticky positioning issues globally.
+- **Input Error Styling**: Inputs now receive `border-destructive` class on validation failure.
+- **Raw JSON Errors**: Intercepted raw Zod errors from tRPC to display user-friendly messages.
+
 ---
 
 ## [0.4.5-alpha] - 2025-12-08

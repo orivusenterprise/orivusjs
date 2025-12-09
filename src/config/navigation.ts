@@ -17,7 +17,6 @@ export const navigationConfig: NavigationConfig = {
     ],
     footerItems: [
         { name: 'Documentation', href: '/docs', icon: 'BookOpen' },
-        { name: 'Settings', href: '/settings', icon: 'Settings' },
     ]
 };
 
