@@ -16,11 +16,20 @@ import path from "path";
 import { writeFileSafely } from "./utils/writeFile";
 import { registerNavigation } from "./utils/registerNavigation";
 
+interface GenerateModuleOptions {
+    /** Product name for navigation grouping (optional) */
+    productName?: string;
+}
+
 /**
  * Orchestrates the generation of a full domain module.
  * Creates the directory structure, writes component files, and updates global configs.
  */
-export async function generateModule(spec: ParsedModuleSpec, projectRoot: string) {
+export async function generateModule(
+    spec: ParsedModuleSpec,
+    projectRoot: string,
+    options: GenerateModuleOptions = {}
+) {
     const moduleName = spec.moduleName;
     const moduleDir = path.join(projectRoot, "src/domain", moduleName);
 
@@ -107,7 +116,7 @@ export { ${modelName}List } from "./${modelName}List";
         console.log(`   - Global router registered.`);
 
         if (!spec.skipUI) {
-            registerNavigation(spec, projectRoot);
+            registerNavigation(spec, projectRoot, options.productName);
         }
 
         // 5. Sync Database (Prisma DB Push)

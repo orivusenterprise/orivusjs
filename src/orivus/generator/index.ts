@@ -5,6 +5,11 @@ import { ModuleSpec } from "../core/module-spec";
 import { parseModuleSpec } from "../core/spec-parser";
 import { generateModule } from "./module-generator";
 
+interface GenerateOptions {
+    /** Product name for navigation grouping (optional) */
+    productName?: string;
+}
+
 /**
  * Punto de entrada principal del generador de OrivusJS v0.2
  *
@@ -19,8 +24,13 @@ import { generateModule } from "./module-generator";
  *
  * @param rawSpec - Especificación del módulo (ModuleSpec)
  * @param projectRoot - Ruta raíz del proyecto (por defecto: process.cwd())
+ * @param options - Generation options (productName, etc.)
  */
-export async function generateFromSpec(rawSpec: ModuleSpec, projectRoot?: string) {
+export async function generateFromSpec(
+    rawSpec: ModuleSpec,
+    projectRoot?: string,
+    options: GenerateOptions = {}
+) {
     const root = projectRoot ?? path.resolve(process.cwd());
 
     console.log(`\n🔍 [OrivusJS] Parseando SPEC para módulo "${rawSpec.name}"...`);
@@ -29,7 +39,7 @@ export async function generateFromSpec(rawSpec: ModuleSpec, projectRoot?: string
 
     console.log(`✅ [OrivusJS] SPEC válido. Generando módulo "${parsed.moduleName}"...\n`);
 
-    await generateModule(parsed, root);
+    await generateModule(parsed, root, options);
 
     console.log(`🏁 [OrivusJS] Módulo "${parsed.moduleName}" generado con éxito.\n`);
 

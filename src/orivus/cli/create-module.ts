@@ -7,12 +7,13 @@ import { validateSpec, formatValidationResult } from "../core/spec-validator";
 async function main() {
     const args = process.argv.slice(2);
     let specPath = args[0];
+    const productName = args[1]; // Optional: product name for navigation grouping
 
     // Interactive Prompt if no arg provided
     if (!specPath) {
         console.log("❌ Please provide the path to the JSON spec file.");
-        console.log("Usage: npm run orivus:create <path-to-spec.json>");
-        console.log("Example: npm run orivus:create ./specs/blog.json");
+        console.log("Usage: npm run orivus:create <path-to-spec.json> [product-name]");
+        console.log("Example: npm run orivus:create ./specs/blog.json 'My Blog'");
         process.exit(1);
     }
 
@@ -27,6 +28,9 @@ async function main() {
     }
 
     console.log(`\n📄 Reading Spec from: ${specPath}`);
+    if (productName) {
+        console.log(`📦 Product Group: ${productName}`);
+    }
 
     try {
         const fileContent = fs.readFileSync(specPath, "utf-8");
@@ -54,8 +58,8 @@ async function main() {
 
         console.log(`\n📦 Generating module: "${spec.name}"`);
 
-        // Execute Generator
-        await generateFromSpec(spec);
+        // Execute Generator with productName option
+        await generateFromSpec(spec, undefined, { productName });
 
     } catch (error: any) {
         if (error instanceof SyntaxError) {

@@ -120,13 +120,28 @@ export type AppRouter = typeof appRouter;
 `;
     fs.writeFileSync(routerPath, cleanRouter);
 
-    // Reset navigation
+    // Reset navigation (v2 structure)
     const navPath = path.join(projectRoot, "src/config/navigation.ts");
-    const cleanNav = `import { NavItem } from '@/types/nav';
+    const cleanNav = `import { NavigationConfig } from '@/types/nav';
 
-export const navigation: NavItem[] = [
-    { name: 'Dashboard', href: '/', icon: 'Home' },
-    // ORIVUS_INJECTION_POINT
+export const navigationConfig: NavigationConfig = {
+    mainItems: [
+        { name: 'Dashboard', href: '/', icon: 'Home' },
+    ],
+    groups: [
+        // ORIVUS_GROUP_INJECTION_POINT
+    ],
+    footerItems: [
+        { name: 'Documentation', href: '/docs', icon: 'BookOpen' },
+        { name: 'Settings', href: '/settings', icon: 'Settings' },
+    ]
+};
+
+// Legacy support
+export const navigation = [
+    ...navigationConfig.mainItems,
+    ...navigationConfig.groups.flatMap(g => g.items),
+    ...navigationConfig.footerItems,
 ];
 `;
     fs.writeFileSync(navPath, cleanNav);
@@ -262,8 +277,10 @@ async function main(): Promise<void> {
     for (const { name, path: specPath } of specs) {
         log("⏳", `Generating ${name}...`);
 
+        // Pass product name for Navigation v2 grouping
+        const productNameArg = manifest.name ? `"${manifest.name}"` : "";
         const genResult = runCommand(
-            `npx tsx src/orivus/cli/create-module.ts ${specPath}`,
+            `npx tsx src/orivus/cli/create-module.ts ${specPath} ${productNameArg}`,
             projectRoot
         );
 
